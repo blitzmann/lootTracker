@@ -5,6 +5,7 @@ This is a phases prototype
 require '_.php';
 
 if (isset($_POST['lootSubmit'])){
+	echo "Submitting loot";
 	$op = $_POST['op'];
 	$phase = $_POST['phase'];
 	// Still accepts negative numbers. Make it so it doesn't
