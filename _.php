@@ -1,4 +1,4 @@
-<pre><?php
+<?php
 session_start();
 
 /****
@@ -57,9 +57,6 @@ if ($User->is_logged_in == false) {
 die;
 }
 
-if(isset($_POST['removeOp'])) {
-	unset($_SESSION['opID']); }
-
 $lootTypes = array(
 //	'Datacores'                     => 'SELECT * FROM invTypes WHERE groupID = 333 AND marketGroupID IS NOT NULL',
 //	'Decryptors'                    => 'SELECT * FROM invTypes WHERE groupID = 979',
@@ -74,9 +71,11 @@ echo "<a href='?logout'>Logout</a><br />
 <a href='sellLoot.php'>Sell Loot</a><br />
 <a href='payOut.php'>Pay Out</a><br />";
 
-
+if(isset($_POST['removeOp'])) {
+	unset($_SESSION['opID']); }
+	
 if(isset($_POST['submitOperation'])) {
-	$DB->ea("INSERT INTO `operations` (`opID`, `ownerID`, `title`, `description`, `timeStart`) VALUES (?, ?, ?, ?, ?)", array(null, $User->id, $_POST['title'], $_POST['description'], time()));
+	$DB->e("INSERT INTO `operations` (`opID`, `ownerID`, `title`, `description`, `timeStart`) VALUES (?, ?, ?, ?, ?)", null, $User->charID, $_POST['title'], $_POST['description'], time());
 	$_SESSION['opID'] = $DB->lastInsertID();
 }
 
@@ -86,12 +85,9 @@ if (isset($_POST['selectOpID'])) {
 if(isset($_SESSION['opID'])) {
 	$operation = $DB->q("SELECT * FROM `operations` WHERE opID = ?", array($_SESSION['opID']));
 
-	echo "<h2>Current Op:</h2>id: ".$operation['opID']."<br />Title: ".$operation['title']."<br />
-	<form method='post'><button type='submit' name='removeOp'>Remove Op Session</button></form><br /><br /><br />";
+	echo "
+		<h2>Current Op:</h2>
+		id: ".$operation['opID']."<br />Title: ".$operation['title']."<br />
+	<form method='post'><button type='submit' name='removeOp'>Remove Op Session</button></form>";
 }
-
-if ($User->hasRole('director')) {
-	echo "<h1>DIRECTR</h1>"; }
-
-
 ?>

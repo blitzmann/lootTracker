@@ -2,69 +2,69 @@
 
 require '_.php';
 
-$lastGroup=array(); //put this somewhere more senseable
-
-if(isset($_POST['endOp'])){
+if (filter_has_var(INPUT_POST, 'endOp')){
 	// check if user is owner
-	print_R($_POST);
-	$DB->ea("UPDATE `operations` SET timeEnd = ? WHERE opID = ?", array(time(), $_POST['endOp'])); }
+	$DB->e("UPDATE `operations` SET timeEnd = ? WHERE opID = ?", time(), filter_var_array($_POST['endOp'], FILTER_VALIDATE_INT)); 
+}
 
 if (isset($_SESSION['opID'])) {
 	// check to see if ID even exists
+	
 	if(isset($_POST['phaseMembers'])) {
 		$members = filter_var_array($_POST['members'], FILTER_VALIDATE_INT);
-		// insert PHASE
-		$DB->ea("INSERT INTO `phases` (`phaseID`, `opID`) VALUES (?, ?)", array(null, $_SESSION['opID']));
-		$phaseID = $DB->lastInsertID();
-		foreach ($members AS $id){
-			$DB->ea("INSERT INTO `participants` (`charID`, `phaseID`) VALUES (?, ?)", array($id, $phaseID));
+
+		$DB->e("INSERT INTO `groups` (`groupID`, `opID`) VALUES (?, ?)", null, $_SESSION['opID']);
+		$groupID = $DB->lastInsertID();
+		foreach ($members AS $id) {
+			$DB->e("INSERT INTO `participants` (`charID`, `groupID`) VALUES (?, ?)", $id, $groupID);
 		}
 	}
 	
-	$phases = $DB->qa("SELECT * FROM `phases` WHERE opID = ? ORDER BY phaseID ASC", array($_SESSION['opID']));
-	
-	if(count($phases) === 0) {
-		echo "You must add the participants of this opp:";
-	}
+	// Pull all the groups for the selected OP
+	$groups = $DB->qa("
+		SELECT *, GROUP_CONCAT(name ORDER BY name SEPARATOR ', ') AS members 
+		FROM `groups` NATURAL JOIN `participants` NATURAL JOIN `memberList`
+		WHERE opID = ?
+		GROUP BY groupID", array($_SESSION['opID']));
+
+	if (count($groups) === 0) {
+		echo "You must add the participants of this opp:"; }
 	else {
-		foreach ($phases AS $phase) {
-				$parts[] = $DB->qa("SELECT part.*, mem.* FROM `participants` AS part INNER JOIN `memberList` AS mem ON (part.charID = mem.charID) WHERE phaseID = ?", array($phase['phaseID'])); 
+		echo "<h2>Groups</h2>";
+		
+		for ($i=0, $l = count($groups); $i<$l; $i++) {
+			echo "Group ".($i+1).": ".$groups[$i]['members']."<br/ >";
 		}
-
-
-	echo "<h2>Groups</h2>";
-
-	for ($i=0, $l = count($parts); $i<$l; $i++) {
-		$names = array();
-		for ($b=0, $m = count($parts[$i]); $b < $m; ++$b) {
-			$names[] = $parts[$i][$b]['name']; }
-		echo "Group ".($i+1).": ".implode($names, ', ')."<br/ >";
 	}
+	
+	// where to put this...
+	$lastGroup	= array_pop($groups);
+	$selected   = array_flip(explode(', ', $lastGroup['members']));
 
-foreach (array_pop($parts) AS $member)	{
-	$lastGroup[] = $member['charID']; }
-
-	}
-echo "
-<form method='post'>
-<table width='100%'>";
+	echo "
+		<form method='post'>
+		<table width='100%'>";
 
 	$members = $DB->qa("SELECT * FROM `memberList` ORDER BY name ASC", array());
-
 	foreach (array_chunk($members, 4) AS $row){
 		echo "<tr>";
 			foreach ($row AS $values) {
-				echo "<td><label for='".$values['charID']."'><input type='checkbox' name='members[]' id='".$values['charID']."' value='".$values['charID']."' ".(in_array($values['charID'], $lastGroup) ? "checked='checked' " : null)."/> ".$values['name']."</label></td>\n";
+				echo "
+				<td>
+					<label for='".$values['charID']."'>
+					<input type='checkbox' name='members[]' id='".$values['charID']."' value='".$values['charID']."' ".
+					(array_key_exists($values['name'], $selected) ? "checked='checked' " : null)
+					."/> ".$values['name']."</label>
+				</td>\n";
 			}				
 		echo "</tr>";
 	}
 	
 
-echo "
-</table>
-<button type='submit' name='phaseMembers'>Submit</button>
-</form>";
-
+	echo "
+		</table>
+		<button type='submit' name='phaseMembers'>Submit</button>
+		</form>";
 
 }
 else{
