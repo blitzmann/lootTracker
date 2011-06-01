@@ -4,6 +4,11 @@ require '_.php';
 
 $lastGroup=array(); //put this somewhere more senseable
 
+if(isset($_POST['endOp'])){
+	// check if user is owner
+	print_R($_POST);
+	$DB->ea("UPDATE `operations` SET timeEnd = ? WHERE opID = ?", array(time(), $_POST['endOp'])); }
+
 if (isset($_SESSION['opID'])) {
 	// check to see if ID even exists
 	if(isset($_POST['phaseMembers'])) {
@@ -79,10 +84,10 @@ Description:
 <form method='post'>
 <?php
 
-	$blah = $DB->qa("SELECT op.*, member.name FROM `operations` AS op INNER JOIN memberList member ON (member.charID = op.ownerID) WHERE op.timeEnd = 0", array());
+	$blah = $DB->qa("SELECT op.*, member.name FROM `operations` AS op INNER JOIN memberList member ON (member.charID = op.ownerID) WHERE op.timeEnd IS NULL ", array());
 
 	foreach ($blah AS $operation){
-		echo "<tr><td>$operation[title]</td><td>$operation[description]</td><td>$operation[name]</td><td>".date("H:i:s", $operation['timeStart'])."</td><td><button type='submit' name='selectOpID' value='".$operation['opID']."'>Select Op</button></td><td><button disabled='disabled'>End</button></td></tr>\n";
+		echo "<tr><td>$operation[title]</td><td>$operation[description]</td><td>$operation[name]</td><td>".date("H:i:s", $operation['timeStart'])."</td><td><button type='submit' name='selectOpID' value='".$operation['opID']."'>Select Op</button></td><td><button type='submit' name='endOp' value='".$operation['opID']."'>End</button></td></tr>\n";
 	}
 	?>
 	</table></form>
