@@ -28,7 +28,7 @@ class Page {
 		"<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en' dir='ltr'>\n".
 		"<head>\n".
 		"	<title>".( $this->title ? $this->title.' : '.SITE_NAME : SITE_NAME )."</title>\n".
-		"	<link rel='stylesheet' type='text/css' href='style/css.css' />\n".
+		"	<link rel='stylesheet' type='text/css' href='style/style.css' />\n".
 		"</head>\n\n".
 		"<body id='te-".basename($_SERVER['SCRIPT_NAME'], '.php')."'>\n\n".
 		"<div id='container'>\n\n". // Needed for more fluidity... stuffs...
@@ -136,7 +136,7 @@ class Page {
 	public function errorfooter($message, $header = 'access')
 	{
 		if ( !headers_sent() ) {
-			switch ( $type ) {
+			switch ( $header ) {
 				case 'access':
 				case 'login': 
 					header('HTTP/1.1 403 Forbidden');

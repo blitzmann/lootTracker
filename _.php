@@ -12,7 +12,7 @@ session_start();
 define('START', array_sum(explode(' ', microtime())));
 define('SALT_LENGTH', 10);
 define('SITE_NAME'  , "M.DYN lootTracker");
-define('n', "\n");
+define('TAX', 0.10);
 define('DEVELOPER', true);
 
 $ingame = substr($_SERVER['HTTP_USER_AGENT'],-7) === 'EVE-IGB';
@@ -104,21 +104,18 @@ if (isset($_POST['selectOpID'])) {
 	// filter!
 	$_SESSION['opID'] = $_POST['selectOpID']; }
 	
-
-if(isset($_POST['submitOperation'])) {
-	// FOR THE LOVE OF GOD FILTER!!!
-	$DB->e("INSERT INTO `operations` (`opID`, `charID`, `title`, `description`, `timeStart`) VALUES (?, ?, ?, ?, ?)", null, $User->charID, $_POST['title'], $_POST['description'], time());
-	$_SESSION['opID'] = $DB->lastInsertID();
-}
-	
 if(isset($_POST['removeOp'])) {
 	unset($_SESSION['opID']); }
 
-$Page->nav = array(
-	"Operations"  => 'operations.php',
-	"Loot Record" => 'lootRecord.php', // if opID session var is set
-	"Sell Loot"   => 'sellLoot.php',
-	"Pay Out"     => 'payOut.php');
+$Page->nav['Home'] = './';
+$Page->nav['Operations']  = 'operations.php';
+
+if (isset($_SESSION['opID'])) {
+	$Page->nav['Loot Record'] = 'lootRecord.php';
+}
+
+$Page->nav['Sell Loot'] = 'sellLoot.php';
+$Page->nav['Pay Out'] = 'payOut.php';
 	
 $Page->title = $title;
 $Page->header();

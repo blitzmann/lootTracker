@@ -1,5 +1,7 @@
 <?php
 
+$title = 'Sell Loot';
+
 require '_.php';
 
 //if ($User->hasRole('director')){
@@ -61,10 +63,10 @@ else {
 	echo "<form action='".$_SERVER['PHP_SELF']."' method='post'>";
 	foreach ($ops AS $op) {
 		echo "
-			<input type='checkbox' name='opSelect[]' value='".$op['opID']."' /> (".$op['opID'].") ".$op['title']." (".$op['owner'].") (total volume of op: <strong>".$op['volume']."m<sup>3</sup></strong>)<br />\n";
+			<input type='checkbox' name='opSelect[]' value='".$op['opID']."' /> (opID: ".$op['opID'].") ".$op['title']." (".$op['owner'].") (total volume of op: <strong>".$op['volume']."m<sup>3</sup></strong>)<br />\n";
 	}
 	echo "<button name='submitOpSale' type='submit'>Go!</button></form>";
 	
 }
-
+$Page->footer();
 ?>

@@ -3,6 +3,7 @@
 require '_.php';
 
 
+
 $form = new Form('newForm', 'Test Form', $_SERVER['PHP_SELF'], 'post');
 
 $form->add_text('text1', 'TEST', $default = '', $size = 20, $max_length = 40, $min_length = 3, $description = false);
@@ -39,6 +40,5 @@ echo "<pre>";
 
 //var_dump($Page);
 
-$Page->pagefooter();
 
 ?>

@@ -72,7 +72,7 @@ if ($form->check_fields_exist()) {
 		"<h2>Loot submited</h2>".
 		"<p>Please make sure you put the loot in the proper corp hanger.</p>";
 		
-		$Page->pagefooter();
+		$Page->footer();
 	}
 	catch (InvalidInput $e) {
 		
