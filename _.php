@@ -26,12 +26,8 @@ if ($ingame) {
 else {
 	die("This only works in the IGB for now. Maybe I'll get around to making it work for regular browsers..."); } 
 
-require 'DB.php';
-require 'eveApiRoles.class.php';
-require 'user.class.php';
-require 'forms.class.php';
-require 'page.class.php';
-
+function __autoload($name) {
+    include './classes/'.$name.'.class.php'; }
 
 //* basic Error stuff
 
