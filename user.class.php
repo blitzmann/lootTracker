@@ -58,7 +58,7 @@ class User extends EveApiRoles {
         if (!$login) {
             return; }
 
-        if (filter_has_var(INPUT_GET, 'logout')) {
+        if (filter_has_var(INPUT_POST, 'logout')) {
             // Logout in two lines. Works on every page and also works if you logged in elsewhere and forgot to log that out.
             $DB->e('UPDATE users SET sessionID = null WHERE charID = ?', $charID);
             self::setcookie('sessionID', null);
@@ -94,7 +94,7 @@ class User extends EveApiRoles {
         }
         // Avoids the edge case where they log in and out in one action
         elseif (!$User->is_registered) {
-            header('Status: 400');
+            //header('Status: 400');
             //$DB->audit_msg(sprintf('Failed login attempt: user="%s" pass="%s"', $username, $password));
         }
 

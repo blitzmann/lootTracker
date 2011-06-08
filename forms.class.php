@@ -159,7 +159,7 @@ class Form {
 				self::check_fields_exist($field_info); break;}
 			
 			// check if the fields have been set, unless it's a fieldset or part of an array (may or may not be set)
-			if (!isset($_POST[$id]) && !$field_info['array'] && $field_info['type'] !== fieldset) {
+			if (!isset($_POST[$id]) && (isset($field_info['array']) && !$field_info['array']) && $field_info['type'] !== fieldset) {
 				return false;
 			}
         }

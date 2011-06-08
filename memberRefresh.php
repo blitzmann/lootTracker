@@ -1,4 +1,4 @@
-<pre><?php
+<?php
 
 require 'DB.php';
 
@@ -21,7 +21,6 @@ function get_data($url) {
 
 $members = new SimpleXMLElement(get_data($memberURL));
 
-print_r($members);
 $membersNew = array();
 
 $DB->query('TRUNCATE TABLE `memberList`');

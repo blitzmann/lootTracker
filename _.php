@@ -9,9 +9,11 @@ session_start();
 //print_r($_COOKIE);
 //print_r($_SESSION);
 
-// yes, I shamelessly stole this from somewhere online
+define('START', array_sum(explode(' ', microtime())));
 define('SALT_LENGTH', 10);
-$loginMessage = '';
+define('SITE_NAME'  , "M.DYN lootTracker");
+define('n', "\n");
+define('DEVELOPER', true);
 
 $ingame = substr($_SERVER['HTTP_USER_AGENT'],-7) === 'EVE-IGB';
 if ($ingame) {
@@ -27,10 +29,36 @@ else {
 require 'DB.php';
 require 'eveApiRoles.class.php';
 require 'user.class.php';
+require 'forms.class.php';
+require 'page.class.php';
 
 
-$DB = new DB(parse_ini_file('/home/ryan/www/private/db.ini'));
+//* basic Error stuff
+
+function e_handler($exception) {
+	header('HTTP/1.1 500 Internal Server Error');
+	header('Content-Type: text/html; charset=UTF-8');
+	echo "<h1>Error</h1>\n",
+		'<pre class="error">',$exception,'</pre>';
+	exit;
+}
+
+//set_error_handler(create_function('$a, $b, $c, $d', 'throw new ErrorException($b, 0, $a, $c, $d);'), E_ALL);
+set_exception_handler('e_handler');
+
+class InvalidInput extends Exception {}
+
+try {
+	$DB = new DB(parse_ini_file('../../../private/db.ini'));
+}
+catch ( PDOException $e ) {
+    echo 'Database connection failed. PDOException:';
+    echo $e->getMessage();
+    die('=/');
+}
+
 $User = new User();
+$Page = new Page();
 
 // -- User thing --
 if ( filter_has_var(INPUT_POST, 'register') ) {
@@ -49,45 +77,49 @@ else {
     $User = new User;
 }
 
-if ($User->is_logged_in == false) {
-	echo
-	"<div style='text-align: center;'><h2>Welcome ".$_SERVER['HTTP_EVE_CHARNAME']."!</h2>".
-	"<p>Please login:</p><p>$loginMessage</p><form action='".$_SERVER['PHP_SELF']."' method='post'>".
-	"<input style='text-align:center;' type='text' name='pass' onfocus='if(this.value == \"Password\") { this.value = \"\"; }' value='Password' /><br /><br /><button name='login' type='submit'>Login</button><button name='register' value='yes' type='submit'>Register</button></form></div>";
-die;
-}
-
 $lootTypes = array(
 //	'Datacores'                     => 'SELECT * FROM invTypes WHERE groupID = 333 AND marketGroupID IS NOT NULL',
 //	'Decryptors'                    => 'SELECT * FROM invTypes WHERE groupID = 979',
 //	'Intact/Malfunctioning/Wrecked' => 'SELECT * FROM invTypes WHERE groupID = 971 OR groupID =	990 OR groupID = 991 OR groupID = 992 OR groupID = 993 OR groupID = 997',
 //	'Gas'                           => 'SELECT * FROM invTypes WHERE groupID = 711 AND marketGroupID = 1145',
-//	'Salvage'                       => 'SELECT * FROM invTypes WHERE groupID = 966',
+	'Salvage'                       => 'SELECT * FROM invTypes WHERE groupID = 966',
 	'Loot'                          => 'SELECT * FROM invTypes WHERE groupID = 880');
 
-echo "<a href='?logout'>Logout</a><br />
-<a href='operations.php'>Operations</a><br />
-<a href='lootRecord.php'>Record Loot</a><br />
-<a href='sellLoot.php'>Sell Loot</a><br />
-<a href='payOut.php'>Pay Out</a><br />";
-
-if(isset($_POST['removeOp'])) {
-	unset($_SESSION['opID']); }
 	
-if(isset($_POST['submitOperation'])) {
-	$DB->e("INSERT INTO `operations` (`opID`, `ownerID`, `title`, `description`, `timeStart`) VALUES (?, ?, ?, ?, ?)", null, $User->charID, $_POST['title'], $_POST['description'], time());
-	$_SESSION['opID'] = $DB->lastInsertID();
+// This is here instead of on the operations page because of var unsetting and stuff.
+if (filter_has_var(INPUT_POST, 'endOp')){
+	if ($User->charID != $DB->q1("SELECT charID FROM `operations` WHERE opID = ?", array($_SESSION['opID']))){
+		$Page->errorfooter("You're not the owner of this operation; you cannot end it."); }
+
+	$endCheck = $DB->q("SELECT * FROM `operations` NATURAL JOIN groups NATURAL JOIN lootData WHERE opID = ?", $_SESSION['opID']); 
+	
+	if ($endCheck === false) {
+		$DB->e("DELETE FROM `operations` WHERE opID = ?", $_SESSION['opID']); }
+	else{
+		$DB->e("UPDATE `operations` SET timeEnd = ? WHERE opID = ?", time(), $_SESSION['opID']); }
+	unset($_SESSION['opID']);
 }
 
 if (isset($_POST['selectOpID'])) {
+	// filter!
 	$_SESSION['opID'] = $_POST['selectOpID']; }
+	
 
-if(isset($_SESSION['opID'])) {
-	$operation = $DB->q("SELECT * FROM `operations` WHERE opID = ?", array($_SESSION['opID']));
-
-	echo "
-		<h2>Current Op:</h2>
-		id: ".$operation['opID']."<br />Title: ".$operation['title']."<br />
-	<form method='post'><button type='submit' name='removeOp'>Remove Op Session</button></form>";
+if(isset($_POST['submitOperation'])) {
+	// FOR THE LOVE OF GOD FILTER!!!
+	$DB->e("INSERT INTO `operations` (`opID`, `charID`, `title`, `description`, `timeStart`) VALUES (?, ?, ?, ?, ?)", null, $User->charID, $_POST['title'], $_POST['description'], time());
+	$_SESSION['opID'] = $DB->lastInsertID();
 }
+	
+if(isset($_POST['removeOp'])) {
+	unset($_SESSION['opID']); }
+
+$Page->nav = array(
+	"Operations"  => 'operations.php',
+	"Loot Record" => 'lootRecord.php', // if opID session var is set
+	"Sell Loot"   => 'sellLoot.php',
+	"Pay Out"     => 'payOut.php');
+	
+$Page->title = $title;
+$Page->header();
 ?>
