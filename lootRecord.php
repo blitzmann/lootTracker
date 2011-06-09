@@ -13,9 +13,13 @@ $groups = $DB->qa("
 	FROM `groups` NATURAL JOIN `participants` NATURAL JOIN `memberList`
 	WHERE opID = ?
 	GROUP BY groupID", array($_SESSION['opID']));
-
+$owner = $DB->q1("
+	SELECT name
+	FROM `operations` NATURAL JOIN memberList
+	WHERE opID = ?", array($_SESSION['opID']));
+	
 if(count($groups) === 0) {
-	$Page->errorfooter('No groups have been added to this operation just yet. Please speak to the owner of the operation about this.', false); }
+	$Page->errorfooter('No groups have been added to this operation just yet. Please speak to the owner of the operation about this: <strong>'.$owner.'</strong>', false); }
 
 $lootDisplay = array();
 $options = array();
@@ -26,20 +30,23 @@ foreach ($lootTypes AS $name => $sql) {
 	foreach ($results AS $value){
 		$lootDisplay[$name][$value['typeID']] = $value; }
 }
-
+echo "
+	<h2>Submit Loot</h2>
+	<p>On this page, you'll be able to record the loot that your operation has collected thus far. If you are in an operation and your cargo is getting full, record the loot here before you drop it off at the corp hanger. You should record the loot here everytime someone joins/leaves the operation (if the correct group isn't listed in the drop down, poke the operation owner: <strong>".$owner."</strong>).</p>
+	<p>To record loot, select the proper group that worked to obtain the loot you currently have. Then type in the quantity of each loot. If a loot hasn't dropped, simply leave the field blank. The loot is organized in the order you should see in your cargo or hanger if you were to sort by type. <strong>Double check that the values you provide are correct; there currently is no confirmation screen.</strong></p><hr />";
 $form = new Form('lootsubmit', 'Submit Loot', $_SERVER['PHP_SELF'], 'post');
 
 // Go through the groups, building the options array
 for ($i=0, $l = count($groups); $i<$l; $i++) {
 	$options[$groups[$i]['groupID']] = "Group ".($i+1).": ".$groups[$i]['members']; }
 	
-$form->add_fieldset('groupsSet', 'Group Select');
+$form->add_fieldset('groupsSet', 'Select Group');
 $form->add_select('groupID', 'Group:', $options, null, null, null, false, 'groupsSet');
 
 foreach ($lootDisplay AS $group => $items){
 	$form->add_fieldset($group, $group);
 	foreach ($items AS $id => $attr) {
-		$form->add_numeric('item',  "<img style='height: 100%; vertical-align: middle;' src='http://evefiles.capsuleer.de/types/".$id."_32.png' /> ".$attr['typeName'], null, 5, 6, 0, 0, null, false, $id, $group); 
+		$form->add_numeric('item',  "<img style='height: 100%; vertical-align: middle;' src='http://evefiles.capsuleer.de/types/".$id."_32.png' /> ".$attr['typeName'], null, 5, 6, 0, 0, null, 'qty', $id, $group); 
 	}
 }
 $form->add_submit('lootSubmit', 'Submit');
@@ -70,7 +77,7 @@ if ($form->check_fields_exist()) {
 
 		echo 
 		"<h2>Loot submited</h2>".
-		"<p>Please make sure you put the loot in the proper corp hanger.</p>";
+		"<p>You may now drop off the loot at any station or POS in which the corp owns a hanger. The specific hanger is called <strong><tt>CEO Secret Stash</tt></strong>. Note that you may not be able to view items in this hanger, but everyone is able to add items to it.</p>";
 		
 		$Page->footer();
 	}

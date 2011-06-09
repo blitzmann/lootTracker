@@ -144,17 +144,18 @@ class Form {
 
 	}
 
+	// this may or may not be completely broken. =/
 	function check_fields_exist() {
 		$params = func_get_args();
 		assert('count($params) <= 1');
-		
+
 		if (count($params) === 0){
 			$fields = $this->fields; }
 		else {
 			$fields = $params[0]; }
 
 		foreach ($fields as $id => $field_info) {
-
+			
 			if (!isset($field_info['type'])) {
 				self::check_fields_exist($field_info); break;}
 			
@@ -174,28 +175,25 @@ class Form {
 
 		$class = 'even';
 
-		echo 
-			"<form action='$this->action' method='$this->method'>\n\n".
-			"<fieldset id='$this->id'>\n\n".
-			"<legend>$this->label</legend>\n\n".
-			'<dl>'."\n\n";
+		echo "
+		<form id='$this->id' action='$this->action' method='$this->method'>
+			<dl>\n\n";
 
 		self::walk($this->fields);
 		
 		foreach ($this->fieldsets AS $id => $label) {
-			echo
-				"<fieldset id='fs-$id_'><legend>".$label."</legend>";
+			echo "
+				<fieldset id='fs-$id'><legend>".$label."</legend>\n";
 			foreach ($this->fieldsetQueue[$id] AS $field) {
 				echo $field;
 			}
-			echo
-				"</fieldset>";
+			echo "
+				</fieldset>\n";
 		}
 
-		echo $this->output.
-			'</dl>'."\n\n".
-			'</fieldset>'."\n\n".
-			'</form>'."\n\n";
+		echo $this->output.'
+			</dl>
+		</form>';
 
 	}
 
@@ -226,13 +224,11 @@ class Form {
 		}
 		else if ($field_info['type'] == text || $field_info['type'] == numeric) {
 			$output =  
-				"  <dt class='". ($class = $class == 'even' ? 'odd' : 'even'). (isset($this->errors[$id]) ? ' error' : ''). "'>";
+				"<dt class='". ($class = $class == 'even' ? 'odd' : 'even'). (isset($this->errors[$id]) ? ' error' : ''). "'>";
         
 			$output .= sprintf(
 				'<label for=\'%1$s_\'>%2$s</label></dt>'."\n".
-				"  <dd class='$class'>\n".
-				'    <input id=\'%1$s_\' name=\'%1$s\' size=\'%3$d\' maxlength=\'%4$d\' type=\'text\' value=\'%5$s\' tabindex=\''. $tabindex .'\' />%6$s'."\n".
-				'  </dd>'."\n\n",
+				"  <dd class='$class'>".'<input id=\'%1$s_\' name=\'%1$s\' size=\'%3$d\' maxlength=\'%4$d\' type=\'text\' value=\'%5$s\' tabindex=\''. $tabindex .'\' />%6$s</dd>'."\n",
 				($parent !== null ? $parent."[$id]" : $id), 
 				$field_info['label'], $field_info['size'], $field_info['max_length'], htmlspecialchars($field_info['value']),
 				$field_info['description'] ? ("\n".
@@ -394,26 +390,26 @@ class Form {
 			if ($field_info['type'] == text || $field_info['type'] == password || $field_info['type'] == textarea || $field_info['type'] == numeric) {
 				$value_length = strlen($field_info['value']);
 				if ($value_length > $field_info['max_length']) {
-					$this->errors[$id][] = 'Please limit your '. strtolower($field_info['label']). ' to a maximum of '. $field_info['max_length']. ' characters.';
+					$this->errors[$id][] = 'Please limit <strong>'. $field_info['label']. '</strong> to a maximum of '. $field_info['max_length']. ' characters.';
 				} elseif ($value_length < $field_info['min_length']) {
-					if ($field_info['min_length'] == 1)
-						$this->errors[$id][] = 'Sorry, but your '. strtolower($field_info['label']). ' cannot be blank.';
+					if ($value_length == 0)
+						$this->errors[$id][] = 'Sorry, but <strong>'. $field_info['label']. '</strong> cannot be blank.';
 					else
-						$this->errors[$id][] = 'Please limit your '. strtolower($field_info['label']). ' to a minimum of '. $field_info['min_length']. ' characters.';
+						$this->errors[$id][] = 'Please limit <strong>'. $field_info['label']. '</strong> to a minimum of '. $field_info['min_length']. ' characters.';
 				}
 
 				if ($field_info['type'] == numeric) {
 					if ($field_info['value'] !== '' && self::int($field_info['value']) === false) {
-						$this->errors[$id][] = 'Sorry, but your '.$field_info['label']. ' has to be a numeric value.'; }
+						$this->errors[$id][] = 'Sorry, but <strong>'.$field_info['label']. '</strong> has to be a numeric value.'; }
 					elseif ($field_info['min_value'] !== null && $field_info['value'] < $field_info['min_value']) {
-						$this->errors[$id][] = 'Sorry, but your '.$field_info['label']. ' cannot be less than '.$field_info['min_value'].'.'; }
+						$this->errors[$id][] = 'Sorry, but <strong>'.$field_info['label']. '</strong> cannot be less than '.$field_info['min_value'].'.'; }
 					elseif ($field_info['max_value'] !== null && $field_info['value'] > $field_info['max_value']) {
-						$this->errors[$id][] = 'Sorry, but your '.$field_info['label']. ' cannot be more than '.$field_info['max_value'].'.'; }
+						$this->errors[$id][] = 'Sorry, but <strong>'.$field_info['label']. '</strong> cannot be more than '.$field_info['max_value'].'.'; }
 				}
 
 				if ($field_info['type'] == textarea && $field_info['max_lines'])
 					if ((substr_count($field_info['value'], "\n") + 1) > $field_info['max_lines'])
-						$this->errors[$id][] = 'Please limit '. strtolower($field_info['label']). ' to a maximum of '. $field_info['max_lines']. ' lines.';
+						$this->errors[$id][] = 'Please limit <strong>'. $field_info['label']. '</strong> to a maximum of '. $field_info['max_lines']. ' lines.';
 
 			} elseif ($field_info['type'] == radio || $field_info['type'] == select) {
 				if (!array_key_exists($field_info['value'], $field_info['options']))

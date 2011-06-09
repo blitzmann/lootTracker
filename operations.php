@@ -37,11 +37,12 @@ if (isset($_SESSION['opID'])) {
 	if (!count($groups)) {
 		echo "You must add the participants of this opp:"; }
 	else {
-		echo "<h2>Groups</h2>";
+		echo "<h2>Groups</h2><dl>";
 		
 		for ($i=0, $l = count($groups); $i<$l; $i++) {
-			echo "Group ".($i+1).": ".$groups[$i]['members']."<br/ >";
+			echo "<dt>Group ".($i+1).":</dt><dd>".$groups[$i]['members']."</dd>";
 		}
+		echo "</dl>";
 	}
 	
 	if ($User->charID == $DB->q1("SELECT charID FROM `operations` WHERE opID = ?", array($_SESSION['opID']))){
@@ -107,7 +108,7 @@ if (isset($_SESSION['opID'])) {
 	}
 		echo "
 		<div id='salvageInfo'>
-			<h2>Salvager</h2>
+			<h2>Salvager Info</h2>
 			<p>Are you this operation's salvager? Do you control the loot? Are you ready to stow it away in the corp hanger? If so, please head over to the <a href='lootRecord.php'>Loot Record</a> page whenever you're ready to drop it off.</p>
 		</div>\n";
 
@@ -162,7 +163,7 @@ else{
 			<span class='bottom'><!-- --></span>
 		</div>
 		<div id='crntOps'>
-		<h2>Current Operations:</h2>
+		<h2>Current Operations</h2>
 			<table>
 			<form action='".$_SERVER['PHP_SELF']."' method='post'>
 				<tr><th>Title</th><th>Owner</th><th>Start</th><th>Select</th></tr>\n";
@@ -183,7 +184,7 @@ else{
 		</table>
 	</div>
 	<div id='lastOps'>
-		<h2>Last 10 Operations:</h2>\n";
+		<h2>Last 10 Operations</h2>\n";
 
 	$last = $DB->qa("SELECT * FROM `operations` NATURAL JOIN memberList NATURAL LEFT JOIN op2sale NATURAL LEFT JOIN saleHistory ORDER BY timeStart DESC LIMIT 0, 10", array());
 	echo "

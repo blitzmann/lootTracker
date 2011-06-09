@@ -9,7 +9,7 @@ session_start();
 //print_r($_COOKIE);
 //print_r($_SESSION);
 
-define('START', array_sum(explode(' ', microtime())));
+define('START', microtime(true));
 define('SALT_LENGTH', 10);
 define('SITE_NAME'  , "M.DYN lootTracker");
 define('TAX', 0.10);
@@ -82,14 +82,6 @@ $lootTypes = array(
 	'Loot'                          => 'SELECT * FROM invTypes WHERE groupID = 880');
 
 $Page->nav['Home'] = 'index.php';
-$Page->nav['Operations']  = 'operations.php';
-
-if (isset($_SESSION['opID'])) {
-	$Page->nav['Loot Record'] = 'lootRecord.php';
-}
-
-$Page->nav['Sell Loot'] = 'sellLoot.php';
-$Page->nav['Pay Out'] = 'payOut.php';
 	
 // This is here instead of on the operations page because of var unsetting and stuff.
 if (filter_has_var(INPUT_POST, 'endOp') && filter_has_var(INPUT_POST, 'confirmEnd') && isset($_SESSION['opID'])){
@@ -119,6 +111,13 @@ if (isset($_POST['selectOpID'])) {
 if(isset($_POST['removeOp'])) {
 	unset($_SESSION['opID']); }
 	
+$Page->nav['Operations']  = 'operations.php';
+if (isset($_SESSION['opID'])) {
+	$Page->nav['Loot Record'] = 'lootRecord.php';
+}
+$Page->nav['Sell Stash'] = 'sellLoot.php';
+$Page->nav['Pay Out'] = 'payOut.php';
+
 $Page->title = (isset($title) ? $title : null);
 $Page->header();
 

@@ -152,8 +152,9 @@ class Page {
 		
 		echo
 		"</div></div></div><div id='footer'>";
+		$end = microtime(true);
 
-		printf('<p>Footer goes here, lulz. | %.4f seconds.</p>', array_sum(explode(' ', microtime())) - START);
+		printf('<p>Footer goes here, lulz. | %01.002fms (%0.5fs)', ($end - START) * 1000, $end - START);
 		echo "</div>\n\n</body>\n</html>";
 		
 		exit;

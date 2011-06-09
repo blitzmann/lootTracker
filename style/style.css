@@ -172,14 +172,13 @@ ul#nav li a:hover, ul#nav li a.active {
 	fieldset {
 		border: none; }
 		
+	
 	legend{
 		font-size: 16px;
 		font-weight: bold;
-		margin: .5em;
+		padding: .5em;
+		margin: .2em 0;
 
-		  display: block;
-  width: 100%;
-  text-align: center;
 	}
 
 	#crntOps{
@@ -194,7 +193,7 @@ ul#nav li a:hover, ul#nav li a.active {
 padding-top: 2em;
 		clear: both;}
 		
-	td {
+	td, th {
 		padding: 2px 4px; }
 	
 	
@@ -217,7 +216,7 @@ margin: 0 auto;		}
 	float:right;
 	width: 292px;
 	border-left: 3px dotted #333; 
-	padding-left:50px;
+	padding-left:35px;
 	margin-left:20px;
 	position:relative;
 }
@@ -283,13 +282,13 @@ input, button, textarea{
 
    select {
         border:      1px solid #CCCCCC;
-
         font-family: Tahoma,Arial,Helvetica,sans-serif;
         font-size:   11px;
     }
     
      option {
-        padding-left: .4em; }
+        padding: 0 .5em;
+		}
     
     fieldset.submit {  
         border-style: none;
@@ -298,21 +297,56 @@ input, button, textarea{
         clear:both;
     }
     
-     .submit input, .submit button {
-        padding: .125em .75em;
+     input, button {
+        padding: .125em .5em;
     }
 
-dt {
+#lootsubmit dt, #sellLoot dt {
     clear: both;
     display: inline;
     float: left;
     height: 32px;
     line-height: 32px;
-    width: 220px;
+    width: 250px;
 }
-dd {
+#lootsubmit dd, #sellLoot dd {
     float: left;
     height: 32px;
     line-height: 32px;
-
+	padding-right: 5px;
 }
+
+
+.submit { text-align: center; clear: both; }
+#sellLoot button {  margin-top: .5em;  }
+
+
+hr { margin-top: .7em; }
+p {
+    margin-top: 0.75em;
+    text-align: justify;
+}
+
+#footer {
+    border-top: 0.0833em solid #666666;
+    clear: both;
+    padding: 0.75em 0;
+    text-align: center;
+}
+#footer p {
+    color: #666666;
+    margin: 0;
+    text-align: center;
+}
+
+
+#lootsubmit .odd, #sellLoot .odd { background: #F1F7FE; border-top: 1px solid black; border-bottom: 1px solid black; }
+#fs-groupsSet dt{ display: none; }
+ #content ul {
+ list-style-type: none; }
+ #content ul li
+ {	height: 32px;
+	line-height: 32px;}
+ #content ul li:before {
+	content: "\00BB \0020";
+	}
