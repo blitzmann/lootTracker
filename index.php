@@ -33,9 +33,11 @@ if ($form->check_fields_exist()) {
 	if ($form->validate()) {
 		echo "Yay! Proper form! Now we can do stuff... <br />"; } 
 }
-echo "</pre>";
+
 $form->display_form();
-echo "<pre>";
+$Page->footer();
+//echo "<pre>";
+
 //var_dump($form);
 
 //var_dump($Page);

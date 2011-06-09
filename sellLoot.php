@@ -24,6 +24,7 @@ if (filter_has_var(INPUT_POST, 'submitLootSale')) {
 	die('<h2>Sale Submited</h2>');
 }
 else if (filter_has_var(INPUT_POST, 'submitOpSale')) {
+// IF NOT OPS ARE SUBMITTED, DO SOMETHING
 	$ops = filter_var_array($_POST['opSelect'], FILTER_VALIDATE_INT);
 	
 	$stuffs = $DB->qa("

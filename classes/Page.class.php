@@ -9,7 +9,7 @@ class Page {
 	public $title;
 	public $nav = array();
 	public $headers = false;	
-	public $active = '/';
+	public $active = './';
 	
 	public $errors = array();
 
@@ -30,27 +30,28 @@ class Page {
 		"	<title>".( $this->title ? $this->title.' : '.SITE_NAME : SITE_NAME )."</title>\n".
 		"	<link rel='stylesheet' type='text/css' href='style/style.css' />\n".
 		"</head>\n\n".
-		"<body id='te-".basename($_SERVER['SCRIPT_NAME'], '.php')."'>\n\n".
-		"<div id='container'>\n\n". // Needed for more fluidity... stuffs...
-		"	<div id='header'>\n".
-		"		<h1>".SITE_NAME."</h1>\n".
-		//"		<h2>".SUB_HEAD."</h2>\n".
-		"	</div>\n";
+		"<body id='lt-".basename($_SERVER['SCRIPT_NAME'], '.php')."'>\n\n".
+		"	<div id='header'>\n";
 		$this->userbox(); // Prints out the userbox
 		echo
+		"		<h1>".SITE_NAME."</h1>\n".
+		//"		<h2>".SUB_HEAD."</h2>\n".
 	//	"	<p class='hide'><a href='#content'>Skip to content</a></p>\n".
-		"<h3>FOR THE LOVE OF GOD</h3><p>Don't use the back button. I dunno why, but it'll cause a 400 error. Shouldn't have any negative effects tho, just refresh.</p><div id='menu'>";
+		"	<p class='note'><strong>Notice:</strong> Don't use the back button. I dunno why, but it'll cause a 400 error.</p>".
+		"	</div>\n";
+		"	<div id='menu-wrapper'>";
 		
 		// Start NAVIGATION
 		echo
-		"	<ul>\n";
+		"		<ul id='menu'>\n";
 		
 		foreach ( $this->nav as $title => $url ) {
-			echo "\t\t<li><a href='$url'".( $this->active == $url ? " class='active'" : null).">$title</a></li>\n"; }
+			echo 
+		"			<li><a href='$url'".(basename($_SERVER['REQUEST_URI']) == $url ? " class='current'" : null).">$title</a></li>\n"; }
 		
 		echo	
-		"	</ul></div>\n".
-		"\n\n".
+		"		</ul>\n".
+		"	</div>\n\n\n".
 		"<div id='wrap'>\n\n".
 		"<div id='content'>\n";
 
@@ -68,7 +69,7 @@ class Page {
 		if (date('I', $date) == '1') $date += 3600;
     	
 		$current_date = gmdate($date_format[0], $date);
-    	
+				
 		// date formats that aren't passed as arrays can be let go immediately
 		// otherwise you can replace the first key in the array with "Today, " or "Yesterday, "
 		if (gettype($date_format) != 'array') {
@@ -92,44 +93,30 @@ class Page {
 	public function userbox() {
 		global $User, $DB;
 		
-		echo
-		"	<div id='userbox'>\n";
+		if ($User->is_logged_in == true) {
 		
-		if ($User->is_logged_in == false) {
+			echo
+			"<div id='userbox'>".
+			"	<span>Wecome <strong>$User->name</strong>!</span>\n".
+			"	<form id='form_logout' action='index.php' method='post'>\n".
+			"	<fieldset><legend>Session:</legend>\n".
+			"		<button type='submit' name='logout'>Log Out</button>\n";
+			if (isset($_SESSION['opID'])){
+				echo
+			"		<button type='submit' name='removeOp' value='".$_SESSION['opID']."'>Unset Op</button>\n"; }
+			echo
+			"	</fieldset>\n".
+			"	</form>\n".
+			"</div>\n";
+		}
+		else {
 			echo
 				"<div style='text-align: center;'><h2>Welcome ".$_SERVER['HTTP_EVE_CHARNAME']."!</h2>".
 				"<p>Please login:</p><p>$loginMessage</p><form action='".$_SERVER['PHP_SELF']."' method='post'>".
 				"<input style='text-align:center;' type='text' name='pass' onfocus='if(this.value == \"Password\") { this.value = \"\"; }' value='Password' /><br /><br /><button value ='yes' name='login' type='submit'>Login</button><button name='register' value='yes' type='submit'>Register</button></form></div>";
 			$this->headers = true;
-		
 			$this->footer();
 		}
-		else {
-			echo
-			"	Wecome <b>$User->name</b>!<br />\n".
-			"	<form id='form_logout' action='./' method='post'>\n".
-			"	<fieldset><legend>Session:</legend>\n".
-			"		<button type='submit' name='logout' onclick='return confirm(\"Really logout?\");'>Log Out</button>\n".
-			"	</fieldset>\n".
-			"	</form>\n";
-			
-			if(isset($_SESSION['opID'])) {
-				$opData = $DB->q("
-					SELECT operations.opID, operations.title, operations.timeStart, memberList.name 
-					FROM `operations` NATURAL JOIN memberList WHERE opID = ?"
-					, array($_SESSION['opID']));
-
-				echo 
-					"<div style='float: right; margin-right: 3em;'>
-					<h2>Current Op:</h2>
-					id: ".$opData['opID']."<br />Title: ".$opData['title']."<br />Owner: ".$opData['name']."<br />
-					<form action='".$_SERVER['PHP_SELF']."' method='post'><button type='submit' name='removeOp'>Leave Op</button></form>
-					</div>";
-			}
-		}
-		
-		echo
-		"	</div>\n";		
 	}
 	
 	// Errors

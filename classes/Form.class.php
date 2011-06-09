@@ -184,7 +184,7 @@ class Form {
 		
 		foreach ($this->fieldsets AS $id => $label) {
 			echo
-				"<fieldset id='$id'><legend>".$label."</legend>";
+				"<fieldset id='fs-$id_'><legend>".$label."</legend>";
 			foreach ($this->fieldsetQueue[$id] AS $field) {
 				echo $field;
 			}
@@ -228,15 +228,15 @@ class Form {
 			$output =  
 				"  <dt class='". ($class = $class == 'even' ? 'odd' : 'even'). (isset($this->errors[$id]) ? ' error' : ''). "'>";
         
-			$output = sprintf(
+			$output .= sprintf(
 				'<label for=\'%1$s_\'>%2$s</label></dt>'."\n".
 				"  <dd class='$class'>\n".
 				'    <input id=\'%1$s_\' name=\'%1$s\' size=\'%3$d\' maxlength=\'%4$d\' type=\'text\' value=\'%5$s\' tabindex=\''. $tabindex .'\' />%6$s'."\n".
 				'  </dd>'."\n\n",
 				($parent !== null ? $parent."[$id]" : $id), 
 				$field_info['label'], $field_info['size'], $field_info['max_length'], htmlspecialchars($field_info['value']),
-				$field_info['description'] ? (n .
-				"    <small>$field_info[description]</small>") : ''
+				$field_info['description'] ? ("\n".
+				"	<small>$field_info[description]</small>") : ''
 			);
 			return $output;
 			
@@ -319,7 +319,7 @@ class Form {
 				'  </dd>'."\n\n",
 				($parent !== null ? $parent."[$id]" : $id),
 				$field_info['label'], $field_info['size'], $field_info['max_length'],
-				$field_info['description'] ? (n .
+				$field_info['description'] ? ("\n".
 				"    <small>$field_info[description]</small>") : ''
 			);
         
@@ -427,7 +427,7 @@ class Form {
 
 	}
 
-	function int($int){
+	static function int($int){
 		if(is_numeric($int) === true && ((int)$int == $int || (float)$int == $int)){
 			return true; }
 		

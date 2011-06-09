@@ -45,7 +45,7 @@ set_exception_handler('e_handler');
 class InvalidInput extends Exception {}
 
 try {
-	$DB = new DB(parse_ini_file('../../../private/db.ini'));
+	$DB = new DB(parse_ini_file('../../../private/db-lootTracker.ini'));
 }
 catch ( PDOException $e ) {
     echo 'Database connection failed. PDOException:';
@@ -81,9 +81,18 @@ $lootTypes = array(
 	'Salvage'                       => 'SELECT * FROM invTypes WHERE groupID = 966',
 	'Loot'                          => 'SELECT * FROM invTypes WHERE groupID = 880');
 
+$Page->nav['Home'] = 'index.php';
+$Page->nav['Operations']  = 'operations.php';
+
+if (isset($_SESSION['opID'])) {
+	$Page->nav['Loot Record'] = 'lootRecord.php';
+}
+
+$Page->nav['Sell Loot'] = 'sellLoot.php';
+$Page->nav['Pay Out'] = 'payOut.php';
 	
 // This is here instead of on the operations page because of var unsetting and stuff.
-if (filter_has_var(INPUT_POST, 'endOp')){
+if (filter_has_var(INPUT_POST, 'endOp') && filter_has_var(INPUT_POST, 'confirmEnd') && isset($_SESSION['opID'])){
 	if ($User->charID != $DB->q1("SELECT charID FROM `operations` WHERE opID = ?", array($_SESSION['opID']))){
 		$Page->errorfooter("You're not the owner of this operation; you cannot end it."); }
 
@@ -96,23 +105,21 @@ if (filter_has_var(INPUT_POST, 'endOp')){
 	unset($_SESSION['opID']);
 }
 
+if (filter_has_var(INPUT_POST, 'transferOp') && filter_input(INPUT_POST, 'transfer', FILTER_VALIDATE_INT) != $User->charID && isset($_SESSION['opID'])){
+	if ($User->charID != $DB->q1("SELECT charID FROM `operations` WHERE opID = ?", array($_SESSION['opID']))){
+		$Page->errorfooter("You're not the owner of this operation; you cannot transfer the ownership."); }
+
+	$DB->e("UPDATE `operations` SET charID = ? WHERE opID = ?", filter_input(INPUT_POST, 'transfer', FILTER_VALIDATE_INT), $_SESSION['opID']);
+}
+
 if (isset($_POST['selectOpID'])) {
 	// filter!
 	$_SESSION['opID'] = $_POST['selectOpID']; }
 	
 if(isset($_POST['removeOp'])) {
 	unset($_SESSION['opID']); }
-
-$Page->nav['Home'] = './';
-$Page->nav['Operations']  = 'operations.php';
-
-if (isset($_SESSION['opID'])) {
-	$Page->nav['Loot Record'] = 'lootRecord.php';
-}
-
-$Page->nav['Sell Loot'] = 'sellLoot.php';
-$Page->nav['Pay Out'] = 'payOut.php';
 	
-$Page->title = $title;
+$Page->title = (isset($title) ? $title : null);
 $Page->header();
+
 ?>
