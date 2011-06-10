@@ -26,7 +26,7 @@ if (filter_has_var(INPUT_POST, 'submitOpSale') || filter_has_var(INPUT_POST, 'su
 
 	echo "
 		<h2>Sell Stash</h3>
-		make sure you put in only what is listed
+		make sure you put in only what is listed<p>dont put decimal place -- wont work and isn't needed
 		<p>On this page, you'll be able to record how much the loot sold for. When you sell the loot, record how much each one sold for. For example, if 30 Melted Nanoribbons sold for 180mil ISK total, type in 180000000 for Melthed Nanoribbons. <strong>Remember:</strong> sometimes you might sell loot to multiple people's buy orders. If this happens, you'll have to sell that loot multiple times. Remember to add the totals up and put the total here.</p>
 		<p>Also, please only sell the amount listed as 'qty'. If, forwhatever reason, you have more, don't sell it. If you don't have enough... well, I'll get to that later (go ahead and sell what you have for now)</p>
 		<hr />";
@@ -113,7 +113,7 @@ else {
 	echo "<form action='".$_SERVER['PHP_SELF']."' method='post'>\n<ul>\n";
 	foreach ($ops AS $op) {
 		echo "
-			<li><label for='".$op['opID']."_'><input id='".$op['opID']."_' type='checkbox' name='opSelect[]' value='".$op['opID']."' /> <em>".$op['title']."</em> -- ".$op['owner']." (total volume of op: <strong>".$op['volume']."m<sup>3</sup></strong>)</label></li>";
+			<li><label for='".$op['opID']."_'><input id='".$op['opID']."_' type='checkbox' name='opSelect[]' value='".$op['opID']."' /><img style='height: 100%; vertical-align: middle;' src='http://evefiles.capsuleer.de/icons/32_32/icon53_16.png' /> <em>".$op['title']."</em> -- ".$op['owner']." (total volume of op: <strong>".$op['volume']."m<sup>3</sup></strong>)</label></li>";
 	}
 	echo "<button name='submitOpSale' type='submit'>Go!</button></form>";
 	

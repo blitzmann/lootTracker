@@ -7,7 +7,10 @@ require '_.php';
 if (isset($_SESSION['opID'])) {
 	
 	// Member submit
-	if(filter_has_var(INPUT_POST, 'phaseMembers')) {
+	// This doesn't use anything from the Form class, such as validation, for various reasons.
+	// Mainly because it's a waste of time for an all-checkbox form (which doesn't need validating)
+	// and for program flow reasons. Maybe later?
+	if(filter_has_var(INPUT_POST, 'submitMembers')) {
 		if ($User->charID != $DB->q1("SELECT charID FROM `operations` WHERE opID = ?", array($_SESSION['opID']))){
 			$Page->errorfooter('You are not the owner of this operation; you cannot add or remove members from it'); }
 
@@ -18,7 +21,7 @@ if (isset($_SESSION['opID'])) {
 		
 			$DB->e("INSERT INTO `groups` (`groupID`, `opID`) VALUES (?, ?)", null, $_SESSION['opID']);
 			$groupID = $DB->lastInsertID();
-			foreach ($members AS $id) {
+			foreach ($members AS $id => $value) {
 				$DB->e("INSERT INTO `participants` (`charID`, `groupID`) VALUES (?, ?)", $id, $groupID); }
 		}
 		catch (InvalidInput $e) {
@@ -37,12 +40,12 @@ if (isset($_SESSION['opID'])) {
 	if (!count($groups)) {
 		echo "You must add the participants of this opp:"; }
 	else {
-		echo "<h2>Groups</h2><dl>";
+		echo "<div id='groups'><h2>Groups</h2><dl>";
 		
 		for ($i=0, $l = count($groups); $i<$l; $i++) {
 			echo "<dt>Group ".($i+1).":</dt><dd>".$groups[$i]['members']."</dd>";
 		}
-		echo "</dl>";
+		echo "</dl></div><span class='clear' /><!-- --></span>";
 	}
 	
 	if ($User->charID == $DB->q1("SELECT charID FROM `operations` WHERE opID = ?", array($_SESSION['opID']))){
@@ -52,32 +55,17 @@ if (isset($_SESSION['opID'])) {
 		$lastGroup	= array_pop($groups);
 		$selected   = array_flip(explode(', ', $lastGroup['members']));
 
-		echo "
-			<form action='".$_SERVER['PHP_SELF']."' method='post'>
-			<table width='100%'>";
-	
-		$members = $DB->qa("SELECT * FROM `memberList` ORDER BY name ASC", array());
-		foreach (array_chunk($members, 4) AS $row){
-			echo "<tr>\n";
-				foreach ($row AS $values) {
-					echo "
-					<td>
-						<label for='".$values['charID']."'>
-						<input type='checkbox' name='members[]' id='".$values['charID']."' value='".$values['charID']."' ".
-						(array_key_exists($values['name'], $selected) ? "checked='checked' " : null)
-						."/> ".$values['name']."</label>
-					</td>\n";
-				}				
-			echo "</tr>\n";
-		}
+		$form = new Form('memberForm', 'Add/Remove Members', $_SERVER['PHP_SELF'], 'post');
 		
-	
+		$members = $DB->qa("SELECT * FROM `memberList` ORDER BY name ASC", array());
+		foreach ($members AS $member){
+			$form->add_checkbox("members", $member['name'], null, (array_key_exists($member['name'], $selected) ? true : false), $member['charID']); }
+		$form->add_submit('submitMembers', 'Submit');
+
+		$form->display_form();
+		
 		echo "
-			</table>
-			<button type='submit' name='phaseMembers'>Submit</button>
-			</form></div>";
-			
-		echo "
+			</div>
 			<div id='endOp'>
 				<h2>End Operation</h2>
 				<p>Click this button if your operation is completed. This will shut off the ability to add [and or edit (future)] more loot to the operation and it's groups, and make it eligable for loot sales. If you have not added any groups, or submited any loot, the operation will be deleted from the system.</p>
@@ -174,7 +162,7 @@ else{
 		<tr>
 			<td>".(strlen($operation['title']) > 20 ? substr($operation['title'],0,(20 -3)).'...' : $operation['title'])."</td>
 			<td>$operation[name]</td>
-			<td>".date("H:i:s", $operation['timeStart'])."</td>
+			<td>".date("m/d H:i", $operation['timeStart'])."</td>
 			<td><button type='submit' name='selectOpID' value='".$operation['opID']."'>Select</button></td>
 		</tr>\n";
 	}

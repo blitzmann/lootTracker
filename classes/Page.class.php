@@ -153,8 +153,7 @@ class Page {
 		echo
 		"</div></div></div><div id='footer'>";
 		$end = microtime(true);
-
-		printf('<p>Footer goes here, lulz. | %01.002fms (%0.5fs)', ($end - START) * 1000, $end - START);
+		printf('<p>Copyright &copy; 2011, lootTracker gitRev: %.8s | Database dump: Dominion 1.0.1 | %01.002fms (%0.5fs)</p>', `git rev-parse --verify HEAD`, ($end - START) * 1000, $end - START);
 		echo "</div>\n\n</body>\n</html>";
 		
 		exit;

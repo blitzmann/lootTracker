@@ -1,13 +1,13 @@
-<h2>Sale 1</h2>
+<h2>Sale 1 Example</h2>
 Let's say you have 2 operations, the loots of which are still waiting to be sold. Here's the breakdown of the operations: (keeping it to 3 loots, numbers totally made up)
 <pre>
 Op 1:
 	Phase 1 participants: Sable, Hal, Will
 		Melted Nanoribbons: 32
 		Sleeper Data Libray: 33
-		Sleeper Drone A.I.: 19
+		Sleeper Drone A.I.: 24
 		
-	Phase 1 participants: Sable, Will, Torvix
+	Phase 2 participants: Sable, Will, Torvix
 		Melted Nanoribbons: 49
 		Sleeper Data Libray: 100
 		Sleeper Drone A.I.: 36
@@ -17,12 +17,12 @@ Op 2:
 		Sleeper Data Libray: 50
 		Sleeper Drone A.I.: 19
 		
-	Phase 1 participants: Torvix, Hal
+	Phase 2 participants: Torvix, Hal
 		Melted Nanoribbons: 53
 		Sleeper Data Libray: 153
 		Sleeper Drone A.I.: 100
 		
-	Phase 1 participants: Will (solo'd)
+	Phase 3 participants: Will (solo'd)
 		Melted Nanoribbons: 14
 		Sleeper Data Libray: 13
 		Sleeper Drone A.I.: 20
@@ -51,57 +51,58 @@ Which means the loot earns this:
 The only thing the seller has to do is input how much each stack of loot sold for. The script will do all the calculations and make it easy.<br /><br />
 (a certain percentage can be cut from each loot type that goes to corp costs (POS fuel, etc.) This can be fine-tuned to maximize profits for players but also leave a bit of buffer for the corp so it doesn't just break even. For this example, there is no corp tax)
 <br /><br />
-
 Break down the operations' loot into percentage, and distribute the total earned for that loot based on that percentage:
+<br /><br />
+Also note that the percentages are truncated to 2 decimals numbers via the database calculations. .07910 would be truncated to .07, which translates to 7%. Whatever left over ISK the produces will be given to corp (or can be kept by the seller if that's the corps policy.) This truncation can be changed to include more precision.
 <pre>
 Op 1:
 	Phase 1 participants: Sable, Hal, Will
-		Melted Nanoribbons: 33 (18.644%) = 191,399,304 (percentage of MNR profits)
-		Sleeper Data Libray: 33 (9.456%) = 6,600,288
-		Sleeper Drone A.I.: 19 (9.548%) = 95,002,600
+		Melted Nanoribbons: 33 (18%) = 184,788,000 (percentage of MNR profits)
+		Sleeper Data Libray: 33 (9%) = 6,282,000
+		Sleeper Drone A.I.: 24 (12%) = 119,400,000
 		
-		TOTAL: 293,002,192
-		Per member: 97,667,397
+		TOTAL: 310,470,000
+		Per member: 103,490,000
 		
-	Phase 1 participants: Sable, Will, Torvix
-		Melted Nanoribbons: 49 (27.684%) = 284,203,944
-		Sleeper Data Libray: 100 (28.653%) = 19,999,794
-		Sleeper Drone A.I.: 36 (18.090%) = 80,495,500
+	Phase 2 participants: Sable, Will, Torvix
+		Melted Nanoribbons: 49 (27%) = 277,182,000
+		Sleeper Data Libray: 100 (28%) = 19,544,000
+		Sleeper Drone A.I.: 36 (18%) = 179,100,000
 		
-		TOTAL: 384,699,238
-		Per member: 128,233,079
+		TOTAL: 475,826,000
+		Per member: 158,608,666
 Op 2:		
 	Phase 1 participants: Hal, Will
-		Melted Nanoribbons: 29 (16.384%) = 168,198,144
-		Sleeper Data Libray: 50 (14.327%) = 10,000,246
-		Sleeper Drone A.I.: 19 (9.548%) = 95,002,600
+		Melted Nanoribbons: 29 (16%) = 164,256,000
+		Sleeper Data Libray: 50 (14%) = 9,772,000
+		Sleeper Drone A.I.: 19 (9%) = 89,550,000
 		
-		TOTAL: 187,698,650
-		Per member: 93,849,325
+		TOTAL: 263,578,000
+		Per member: 131,789,000
 		
-	Phase 1 participants: Torvix, Hal
-		Melted Nanoribbons: 53 (29.944%) = 307,405,104
-		Sleeper Data Libray: 153 (43.840%) = 30,600,320
-		Sleeper Drone A.I.: 100 (50.251%) = 499,997,450
+	Phase 2 participants: Torvix, Hal
+		Melted Nanoribbons: 53 (29%) = 297,701,000
+		Sleeper Data Libray: 153 (43%) = 30,014,000
+		Sleeper Drone A.I.: 100 (50%) = 497,500,000
 		
-		TOTAL: 838,002,874
-		Per member: 419,001,437
+		TOTAL: 825,215,000
+		Per member: 412,607,500
 		
-	Phase 1 participants: Will (solo'd)
-		Melted Nanoribbons: 14 (7.910%) = 81,204,060
-		Sleeper Data Libray: 13 (3.725%) = 2,600,050
-		Sleeper Drone A.I.: 20 (10.050%) = 99,997,500
+	Phase 3 participants: Will (solo'd)
+		Melted Nanoribbons: 14 (7%) = 71,862,000
+		Sleeper Data Libray: 13 (3%) = 2,094,000
+		Sleeper Drone A.I.: 20 (10%) = 99,500,000
 		
-		TOTAL: 183,801,610
-		Per member: 183,801,610
+		TOTAL: 173,456,000
+		Per member: 173,456,000
 </pre>	
 
 For each member in operation phases, the script will add the "Per member" value to their balance. Display a page that has a link to each of their show info boxs and the amount of ISK they are due to make it easier for the seller to distribute the earnings.
 <br /><br />
-Any pocket change left due the significant figures in percentages and rounding down will be kept by the corp.
+Any pocket change left due to rounding precision in percentages will be kept by the corp. Any 0.xx ISK calculated is truncated, and will be kept by corp.
 <br /><br />
 
-<h2>Sale 2</h2>
+<h2>Sale 2 Example</h2>
 <pre>Op 4:
 	Phase 1 participants: Sable, Will
 		Melted Nanoribbons: 38 (74.509%) 220,397,622

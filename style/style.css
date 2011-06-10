@@ -275,6 +275,7 @@ input, button, textarea{
         border:      1px solid #CCCCCC;
         font-family: Helvetica,Tahoma,Arial,sans-serif;
         font-size:   11px;
+		background-color: #F0F0F0;
     }
 
     input:focus, select:focus, textarea:focus {
@@ -301,22 +302,36 @@ input, button, textarea{
         padding: .125em .5em;
     }
 
-#lootsubmit dt, #sellLoot dt {
+#lootsubmit dt, #sellLoot dt , #lt-payOut dt {
     clear: both;
     display: inline;
     float: left;
     height: 32px;
     line-height: 32px;
-    width: 250px;
+    width: 280px;
 }
-#lootsubmit dd, #sellLoot dd {
+#lootsubmit dd, #sellLoot dd, #lt-payOut dd {
     float: left;
     height: 32px;
     line-height: 32px;
 	padding-right: 5px;
 }
 
-
+#groups dt {
+    clear: both;
+    display: inline;
+    float: left;
+    height: 24px;
+    line-height: 24px;
+    width: 50px;
+}
+#groups dd {
+    float: left;
+    height: 24px;
+    line-height: 24px;
+	padding-right: 5px;
+}
+span.clear { display:none; clear: both; }	
 .submit { text-align: center; clear: both; }
 #sellLoot button {  margin-top: .5em;  }
 
@@ -340,13 +355,41 @@ p {
 }
 
 
-#lootsubmit .odd, #sellLoot .odd { background: #F1F7FE; border-top: 1px solid black; border-bottom: 1px solid black; }
+#lootsubmit .odd, #sellLoot .odd, #lt-payOut .odd { background: #F1F7FE; border-top: 1px solid black; border-bottom: 1px solid black; }
+
 #fs-groupsSet dt{ display: none; }
+ 
  #content ul {
  list-style-type: none; }
+ 
  #content ul li
- {	height: 32px;
-	line-height: 32px;}
+ {	
+
+ height: 32px;
+ line-height: 32px;
+ 
+ }
  #content ul li:before {
 	content: "\00BB \0020";
 	}
+
+.greenbox{ }
+
+#members { clear: both; }
+
+#memberForm dd { display: none; }
+#memberForm dt { float: left; width: 170px;     height: 32px;
+    line-height: 32px;}
+	
+	/*
+	Doesn't work
+#memberForm input[type="checkbox"][checked] {
+background-color: #E6F8DE;
+    border: 1px solid #4C9A20;
+	padding: 5px; }
+	*/
+/* Was supposed to start a new row every 4 elements. This is handeled automatically from the floats wrapping around
+dt:nth-child(3n+2) { background: #F1F7FE; border-top: 1px solid black; border-bottom: 1px solid black; }
+*/
+#memberForm { margin: 0 auto;}
+

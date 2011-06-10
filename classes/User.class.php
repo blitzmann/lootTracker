@@ -64,7 +64,7 @@ class User extends EveApiRoles {
             self::setcookie('sessionID', null);
         }
         else {
-            $DB->e('UPDATE users SET login_date = now(), login_addr = ? WHERE charID = ?', $_SERVER['REMOTE_ADDR'], $charID);
+            $DB->e('UPDATE users SET login_date = UNIX_TIMESTAMP(), login_addr = INET_ATON(?) WHERE charID = ?', $_SERVER['REMOTE_ADDR'], $charID);
             $this->is_logged_in = true;
         }
     }

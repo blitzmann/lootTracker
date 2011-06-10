@@ -1,19 +1,17 @@
 <?php
+ob_start("ob_gzhandler"); 
 session_start();
-
-/****
- * IGB stuff
- ***/
- 
-//print_r($_SERVER);
-//print_r($_COOKIE);
-//print_r($_SESSION);
 
 define('START', microtime(true));
 define('SALT_LENGTH', 10);
-define('SITE_NAME'  , "M.DYN lootTracker");
-define('TAX', 0.10);
-define('DEVELOPER', true);
+
+// Basic config
+define('SITE_NAME', "M.DYN lootTracker");
+define('CORP', 'Massively Dynamic');
+define('CORPTIC', 'M.DYN');
+define('CORPID', 98022296);
+define('TAX', .1); //Tax. 1 = 100%, .35 = 35%, etc
+define('DEVELOPER', true); // If true, prints out errors on page in the footer
 
 $ingame = substr($_SERVER['HTTP_USER_AGENT'],-7) === 'EVE-IGB';
 if ($ingame) {
@@ -21,7 +19,7 @@ if ($ingame) {
 		die(
 		"<div style='text-align: center;'>This website requires trust. Please click on trust, then click reload.<br />".
 		"1) <a href='' onclick=\"CCPEVE.requestTrust('http://".$_SERVER['HTTP_HOST']."/')\">Request trust</a><br />".
-		"2) <a href=''>Reload</a></div>"); }
+		"2) <a href='./'>Reload</a></div>"); }
 }
 else {
 	die("This only works in the IGB for now. Maybe I'll get around to making it work for regular browsers..."); } 
@@ -52,6 +50,13 @@ catch ( PDOException $e ) {
     echo $e->getMessage();
     die('=/');
 }
+
+// sanity check
+try {
+	if(TAX > 1 || TAX < 0){
+		throw new Exception('You clutz! Set your Tax to a sane value.'); }
+} catch ( Exception $e ) {
+	die($e->getMessage()); }
 
 $User = new User();
 $Page = new Page();

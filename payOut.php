@@ -5,13 +5,20 @@ require '_.php';
 
 
 if (filter_has_var(INPUT_POST, 'submitPayed')){
+		// todo: if refreshed, payment info will be updated again... Don't do that
+		//       Perhaps set, thun unset, some session vars 
 		$DB->e("UPDATE saleHistory SET payer = ?, payedTime = ? WHERE saleID = ?", $User->charID, time(), filter_input(INPUT_POST, 'submitPayed', FILTER_SANITIZE_NUMBER_INT));
-		die("<h2>Payments Complete</h2>");
+		echo "
+			<h2>Payments Complete</h2>
+			<p>With payment completed, this sale and the operations associated with it will now go into archives. Thank you!</p>";
+		$Page->footer();
 }
 else if (filter_has_var(INPUT_POST, 'payout')){
-
-	echo "<p>Click name to open Show Info. top left corner there's a white box thing. Click it -> give money and type in the amount you see here. Checkboxes are provided to help you keep track of who has been payed; they serve no other function. <strong>REMEMBER:</strong> Click the \"Done!\" button when finished to complete payout.</p><p>TODO: (JS function) when name is clicked, copy amount owed to clipboard so that payer cane just paste it.</p>
-	<p>".(TAX*100)."% corp tax is applied to calculations, including whatever has been left over from rounding down.</p><dl>";
+/*
+	make it so that the checkboxes are REQUIRED
+*/
+	echo "<h2>Pay Out</h2><p>Click name to open Show Info. top left corner there's a white box thing. Click it -> give money and type in the amount you see here. Checkboxes are provided to help you keep track of who has been payed; they serve no other function. <strong>REMEMBER:</strong> Click the \"Done!\" button when finished to complete payout.</p>
+	<p><strong>".(TAX*100)."%</strong> corp tax is applied to calculations, which is then added to whatever has been left over from from total profit due to rounding down.</p><hr /><dl>";
 	
 	$data = $DB->qa("
 		SELECT *, payout - (payout*?) AS truePayout, (payout*?) as tax
@@ -19,21 +26,25 @@ else if (filter_has_var(INPUT_POST, 'payout')){
 		WHERE saleID = ?", array(TAX, TAX, filter_input(INPUT_POST, 'payout', FILTER_SANITIZE_NUMBER_INT)));
 		
 	$corpTax = $DB->q1("SELECT difference FROM `profit-payout` WHERE saleID = ?", array(filter_input(INPUT_POST, 'payout', FILTER_SANITIZE_NUMBER_INT)));
+	$class = 'even';
 	foreach ($data AS $character) {
+		$class = ($class == 'even' ? 'odd' : 'even');
 		$corpTax = $corpTax+$character['tax'];
 		echo "
-		<dt><input type='checkbox' /> <img style='vertical-align: middle;' src='http://evefiles.capsuleer.de/icons/16_16/icon09_09.png' />
-			<a onclick='CCPEVE.showInfo(1377, ".$character['charID'].")'>".$character['name']."</a></dt><dd>".number_format($character['truePayout'])."</dd>"; }
+		<dt class='".$class."'><input type='checkbox' /> <img style='vertical-align: middle;' src='http://evefiles.capsuleer.de/icons/16_16/icon09_09.png' />
+			<a onclick='CCPEVE.showInfo(1377, ".$character['charID'].")'> ".$character['name']."</a></dt><dd class='".$class."'>".number_format($character['truePayout'])."</dd>"; }
 		
 	echo "
-	<dt><input type='checkbox' /> <img style='vertical-align: middle;' src='http://evefiles.capsuleer.de/icons/16_16/icon09_09.png' />
-			<a onclick='CCPEVE.showInfo(1377, ".$character['charID'].")'>[M.DYN] Massively Dynamic</a></dt><dd>".number_format($corpTax)."</dd>
+	<dt class='".($class == 'even' ? 'odd' : 'even')."'><input type='checkbox' /> <img style='vertical-align: middle;' src='http://evefiles.capsuleer.de/icons/16_16/icon09_09.png' />
+			<a onclick='CCPEVE.showInfo(2, ".CORPID.")'> ".CORPTIC." ".CORP."</a></dt><dd class='".($class == 'even' ? 'odd' : 'even')."'>".number_format($corpTax)."</dd>
 	</dl>
-	<form action='".$_SERVER['PHP_SELF']."' method='post'>
-	<button name='submitPayed' value='".filter_input(INPUT_POST, 'payout', FILTER_SANITIZE_NUMBER_INT)."'>Done!</button></form>";
+	<form action='".$_SERVER['PHP_SELF']."' method='post'><p class='submit'>
+	<button name='submitPayed' value='".filter_input(INPUT_POST, 'payout', FILTER_SANITIZE_NUMBER_INT)."'>Done!</button></p></form>";
 }
 else {
-	echo "These loot runs have yet to be payed out. Please choose one to pay out.";
+	echo "
+		<h2>Pay Out</h2>
+		<p>These loot runs have yet to be payed out. Please choose one to pay out.</p>";
 
 	$payouts = $DB->qa("
 		SELECT saleHistory.*, COUNT(op2sale.opID) AS opCount, memberList.name
@@ -43,13 +54,13 @@ else {
 		WHERE payedTime IS NULL
 		GROUP BY saleID", array());
 
-	echo "<form action='".$_SERVER['PHP_SELF']."' method='post'>";
+	echo "<form action='".$_SERVER['PHP_SELF']."' method='post'><ul>\n";
 	foreach ($payouts AS $payout) {
 		echo "
-			<button type='submit' name='payout' value='".$payout['saleID']."'>Pay</button> 
-			(id: ".$payout['saleID'].") (OPs: ".$payout['opCount'].") ".$payout['name']." sold stuff on [date here]<br />";
+			<li><button type='submit' name='payout' value='".$payout['saleID']."'>Pay</button> 
+			".$payout['name']." sold stuff on ".date('m/d \a\t H:i', $payout['saleTime'])." (# of operations: ".$payout['opCount'].")</li>";
 	}
-	echo "</form>";
+	echo "</ul></form>";
 }
 
 $Page->footer();

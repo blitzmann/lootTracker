@@ -11,6 +11,8 @@ $form->add_text('text1', 'TEST', $default = '', $size = 20, $max_length = 40, $m
 $form->add_fieldset(1532, 'Text Array');
 $form->add_fieldset(5568, 'Checkbox Array');
 $form->add_fieldset(4471, 'Numeric Array');
+$form->add_fieldset(4474, 'nth-child test');
+
 
 for ($i=0, $l = 2; $i<$l; $i++) {
 	$form->add_text("name", 'Text '.($i+1), null, 20, 15, 3, 'Description here', "t$i", 1532);
@@ -25,6 +27,12 @@ for ($i=0, $l = 2; $i<$l; $i++) {
 for ($i=0, $l = 3; $i<$l; $i++) {
 	$form->add_checkbox("checks", 'Check '.($i+1), null, null, "c$i", 5568);
 }
+
+for ($i=0, $l = 32; $i<$l; $i++) {
+	$form->add_checkbox("checks", 'Check '.($i+1), null, null, "c$i", 4474);
+}
+
+
 $form->add_submit('wwf', 'Submit');
 
 if ($form->check_fields_exist()) {
