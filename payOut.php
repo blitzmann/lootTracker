@@ -17,8 +17,8 @@ else if (filter_has_var(INPUT_POST, 'payout')){
 /*
 	make it so that the checkboxes are REQUIRED
 */
-	echo "<h2>Pay Out</h2><p>Click name to open Show Info. top left corner there's a white box thing. Click it -> give money and type in the amount you see here. Checkboxes are provided to help you keep track of who has been payed; they serve no other function. <strong>REMEMBER:</strong> Click the \"Done!\" button when finished to complete payout.</p>
-	<p><strong>".(TAX*100)."%</strong> corp tax is applied to calculations, which is then added to whatever has been left over from from total profit due to rounding down.</p><hr /><dl>";
+	echo "<h2>Pay Out</h2><p>Click name to open Show Info. In the top left corner there's a white box thing. Click it -&gt; Give Money and type in the amount you see here. Checkboxes are provided to help you keep track of who has been payed; they serve no other function. <strong>Remember:</strong> Click the \"Done!\" button when finished to complete payout.</p>
+	<p><strong>".(TAX*100)."%</strong> corp tax is automatically applied to calculations, which is then added to whatever has been left over from from total profit due to rounding down.</p><hr /><dl>";
 	
 	$data = $DB->qa("
 		SELECT *, payout - (payout*?) AS truePayout, (payout*?) as tax

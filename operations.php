@@ -26,7 +26,7 @@ if (isset($_SESSION['opID'])) {
 		}
 		catch (InvalidInput $e) {
 			echo "
-				<p class='error'>".$e->getMessage()."</p>\n";
+				<p class='error'><strong>Error:</strong> </span>".$e->getMessage()."</p>\n";
 		}
 	}
 
@@ -38,7 +38,7 @@ if (isset($_SESSION['opID'])) {
 		GROUP BY groupID", array($_SESSION['opID']));
 
 	if (!count($groups)) {
-		echo "You must add the participants of this opp:"; }
+		echo "<div class='note'><strong>Notice:</strong> No participants have been added to this operation yet.</div>"; }
 	else {
 		echo "<div id='groups'><h2>Groups</h2><dl>";
 		
@@ -68,7 +68,7 @@ if (isset($_SESSION['opID'])) {
 			</div>
 			<div id='endOp'>
 				<h2>End Operation</h2>
-				<p>Click this button if your operation is completed. This will shut off the ability to add [and or edit (future)] more loot to the operation and it's groups, and make it eligable for loot sales. If you have not added any groups, or submited any loot, the operation will be deleted from the system.</p>
+				<p>Use this if your operation has completed. This will shut off the ability to add more loot and/or groups to the operation, and renders the operation eligable for loot sales. If you have not added any groups, or no loot has been submitted, the operation will be deleted from the system.</p>
 				<form action='".$_SERVER['PHP_SELF']."' method='post'>
 					<label for='confirmEnd_'><input id='confirmEnd_' type='checkbox' name='confirmEnd' value='1' /> Confirm End</label>
 					<button type='submit' name='endOp' value='".$_SESSION['opID']."'>End Op</button> 
@@ -76,7 +76,7 @@ if (isset($_SESSION['opID'])) {
 			</div>
 			<div id='transferOwnership'>
 				<h2>Transfer Ownership</h2>
-				<p>You can transfer ownership to another corpmate if you are planning on leaving the operation for whatever reason. This will allow the new owner to continue adding and remiving members from the operation and generally give them control of the operation.</p>
+				<p>You can transfer ownership to another corpmate if you are planning on leaving the operation for whatever reason. This will allow the new owner to continue adding and removing members from the operation, along with whatever else needs to be done.</p>
 				<form action='".$_SERVER['PHP_SELF']."' method='post'>
 					<select name='transfer' size='1'>\n";
 				

@@ -112,8 +112,8 @@ class Page {
 		else {
 			echo
 				"<div style='text-align: center;'><h2>Welcome ".$_SERVER['HTTP_EVE_CHARNAME']."!</h2>".
-				"<p>Please login:</p><p>$loginMessage</p><form action='".$_SERVER['PHP_SELF']."' method='post'>".
-				"<input style='text-align:center;' type='text' name='pass' onfocus='if(this.value == \"Password\") { this.value = \"\"; }' value='Password' /><br /><br /><button value ='yes' name='login' type='submit'>Login</button><button name='register' value='yes' type='submit'>Register</button></form></div>";
+				"<form action='".$_SERVER['PHP_SELF']."' method='post'>".
+				"<input style='text-align:center;' type='password' name='pass' onfocus='if(this.value == \"**********\") { this.value = \"\"; }' value='**********' /><br /><br /><button value ='yes' name='login' type='submit'>Login</button><button name='register' value='yes' type='submit'>Register</button></form></div>";
 			$this->headers = true;
 			$this->footer();
 		}
@@ -153,7 +153,7 @@ class Page {
 		echo
 		"</div></div></div><div id='footer'>";
 		$end = microtime(true);
-		printf('<p>Copyright &copy; 2011, lootTracker gitRev: %.8s | Database dump: Dominion 1.0.1 | %01.002fms (%0.5fs)</p>', `git rev-parse --verify HEAD`, ($end - START) * 1000, $end - START);
+		printf('<p>Copyright &copy; 2011 Ryan Holmes, aka Sable Blitzmann | gitRev: %.8s | Database dump: Dominion 1.0.1 | %01.002fms (%0.5fs)</p>', `git rev-parse --verify HEAD`, ($end - START) * 1000, $end - START);
 		echo "</div>\n\n</body>\n</html>";
 		
 		exit;

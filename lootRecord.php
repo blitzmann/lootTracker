@@ -7,7 +7,8 @@ require '_.php';
 if(!isset($_SESSION['opID'])) {
 	$Page->errorfooter('No operation has been selected. Please go to the operations page and select an operation before recording your loot.', false); }
 
-
+	echo "<h2>Submit Loot</h2>\n";
+	
 $groups = $DB->qa("
 	SELECT *, GROUP_CONCAT(name ORDER BY name SEPARATOR ', ') AS members 
 	FROM `groups` NATURAL JOIN `participants` NATURAL JOIN `memberList`
@@ -19,7 +20,7 @@ $owner = $DB->q1("
 	WHERE opID = ?", array($_SESSION['opID']));
 	
 if(count($groups) === 0) {
-	$Page->errorfooter('No groups have been added to this operation just yet. Please speak to the owner of the operation about this: <strong>'.$owner.'</strong>', false); }
+	$Page->errorfooter('<strong>Error:</strong> No groups have been added to this operation just yet. Please speak to the owner of the operation about this: <strong>'.$owner.'</strong>', false); }
 
 $lootDisplay = array();
 $options = array();
@@ -30,10 +31,7 @@ foreach ($lootTypes AS $name => $sql) {
 	foreach ($results AS $value){
 		$lootDisplay[$name][$value['typeID']] = $value; }
 }
-echo "
-	<h2>Submit Loot</h2>
-	<p>On this page, you'll be able to record the loot that your operation has collected thus far. If you are in an operation and your cargo is getting full, record the loot here before you drop it off at the corp hanger. You should record the loot here everytime someone joins/leaves the operation (if the correct group isn't listed in the drop down, poke the operation owner: <strong>".$owner."</strong>).</p>
-	<p>To record loot, select the proper group that worked to obtain the loot you currently have. Then type in the quantity of each loot. If a loot hasn't dropped, simply leave the field blank. The loot is organized in the order you should see in your cargo or hanger if you were to sort by type. <strong>Double check that the values you provide are correct; there currently is no confirmation screen.</strong></p><hr />";
+
 $form = new Form('lootsubmit', 'Submit Loot', $_SERVER['PHP_SELF'], 'post');
 
 // Go through the groups, building the options array
@@ -76,22 +74,27 @@ if ($form->check_fields_exist()) {
 		}
 
 		echo 
-		"<h2>Loot submited</h2>".
-		"<p>You may now drop off the loot at any station or POS in which the corp owns a hanger. The specific hanger is called <strong><tt>CEO Secret Stash</tt></strong>. Note that you may not be able to view items in this hanger, but everyone is able to add items to it.</p>
+		"<div class='success'><strong>Success:</strong> Loot submited</div>".
+		"<p>You may now drop off the loot at any station or POS in which the corp owns a hanger. The specific hanger is called <strong>CEO Secret Stash</strong>. Note that you may not be able to view items in this hanger, but everyone is able to add items to it. Just drag n' drop.</p>
 		<p>Alternatively, you can private contract all the loot directly to a corp director and they should be able to pick it up at their leasure. Make sure the contract is in high or lowsec (no nullsec).</p>";
 		
 		$Page->footer();
 	}
 	catch (InvalidInput $e) {
 		
-		echo '<p class="error">There are errors in your form!<br />';
+		$error = '<p class="error"><span>There were errors processing your request</span>';
 		foreach ($form->errors as $id => $errors) {
-			echo implode('<br />', $errors). '<br />';
+			$error .= implode('<br />', $errors). '<br />';
 		}
-		echo '</p>'."\n\n";
+		$error .= '</p>'."\n\n";
 
 	}
 }
 
+echo "
+	<p>On this page, you'll be able to record the loot that your operation has collected thus far. If you are in an operation and your cargo is getting full, record the loot here before you drop it off at the corp hanger. You should record the loot here everytime someone joins/leaves the operation (if the correct group isn't listed in the drop down, poke the operation owner: <strong>".$owner."</strong>).</p>
+	<p>To record loot, select the proper group that worked to obtain the loot you currently have. Then type in the quantity of each loot. If a loot hasn't dropped, simply leave the field blank. The loot is organized in the order you should see in your cargo or hanger if you were to sort by type. <strong>Double check that the values you provide are correct; there currently is no confirmation screen.</strong></p><hr />";
+
+if (isset($error)) { echo $error; }
 $form->display_form();
 $Page->footer();

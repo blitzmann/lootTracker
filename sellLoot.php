@@ -7,13 +7,15 @@ require '_.php';
 //if ($User->hasRole('director')){
 //	$Page->errorfooter('Sorry, but only Directors or other trusted members can access the loot container, and thus sell it.'); }
 
+echo "<h2>Sell Stash</h3>";
+
 if (filter_has_var(INPUT_POST, 'submitOpSale') || filter_has_var(INPUT_POST, 'submitLootSale')) {
 
-	if (filter_has_var(INPUT_POST, 'submitOpSale')){
+	if (filter_has_var(INPUT_POST, 'opSelect')){
 		$_SESSION['sellLootOps'] = filter_var_array($_POST['opSelect'], FILTER_VALIDATE_INT); }
 
 	if (!count($_SESSION['sellLootOps'])){
-				$Page->errorfooter('No operations selected.', false); }
+				$Page->errorfooter('<strong>Error:</strong> No operations selected.', false); }
 
 	$stuffs = $DB->qa("
 		SELECT lootData.typeID, invTypes.typeName, SUM(lootData.amount) AS total FROM `lootData`
@@ -23,13 +25,6 @@ if (filter_has_var(INPUT_POST, 'submitOpSale') || filter_has_var(INPUT_POST, 'su
 		WHERE opID = ".implode($_SESSION['sellLootOps'], ' OR opID = ')."
 		GROUP BY typeID
 		", array());
-
-	echo "
-		<h2>Sell Stash</h3>
-		make sure you put in only what is listed<p>dont put decimal place -- wont work and isn't needed
-		<p>On this page, you'll be able to record how much the loot sold for. When you sell the loot, record how much each one sold for. For example, if 30 Melted Nanoribbons sold for 180mil ISK total, type in 180000000 for Melthed Nanoribbons. <strong>Remember:</strong> sometimes you might sell loot to multiple people's buy orders. If this happens, you'll have to sell that loot multiple times. Remember to add the totals up and put the total here.</p>
-		<p>Also, please only sell the amount listed as 'qty'. If, forwhatever reason, you have more, don't sell it. If you don't have enough... well, I'll get to that later (go ahead and sell what you have for now)</p>
-		<hr />";
 
 	$form = new Form('sellLoot', 'Sell Stash', $_SERVER['PHP_SELF'], 'post');
 	
@@ -69,28 +64,37 @@ if (filter_has_var(INPUT_POST, 'submitOpSale') || filter_has_var(INPUT_POST, 'su
 			foreach ($loots AS $id => $profit) {
 				$DB->e("INSERT INTO `saleData` (`saleID`, `typeID`, `profit`) VALUES (?, ?, ?)", $saleID, $id, $profit); }
 	
+			$profit = $DB->q1("SELECT SUM(profit) FROM saleData WHERE saleID = ? GROUP BY saleID", $saleID);
 			echo 
-			"<h2>Sale Submited</h2>".
-			"<p>Profit from this sale has successfully been submitted into the database. To issue payments to all the corp members involved, please visit the <a href='payOut.php'>Pay Out</a> page.</p>";
+			"<div class='success'><strong>Success:</strong> Sale submited</div>".
+			"<p>Profit from this sale has successfully been submitted into the database.</p>
+			<p><strong>Important:</strong> If you sold the loot and the money went to your personal wallet (ie: did not \"use corp wallet\" when selling), transfer <strong>".number_format($profit)."</strong> to the corp's payout wallet. <strong>Failing to do so will be considered corp theft and be delt with accordingly.</strong></p>
+			<p>To issue payments to all the corp members involved, please visit the <a href='payOut.php'>Pay Out</a> page. This can be done later if now is not a convienent time.</p>";
 			
 			$Page->footer();
 		}
 		catch (InvalidInput $e) {
-			
-			echo '<p class="error">There are errors in your form!<br />';
+		
+			$error = '<p class="error"><span>There were errors processing your request</span>';
 			foreach ($form->errors as $id => $errors) {
-				echo implode('<br />', $errors). '<br />';
+				$error .= implode('<br />', $errors). '<br />';
 			}
-			echo '</p>'."\n\n";
-	
-		}
-	}
+			$error .= '</p>'."\n\n";
 
+		}	
+	}
+	
+	echo "
+		<p>On this page, you'll be able to record how much the loot sold for. Simple two step process:</p>
+		<p>1) Load up your cargohold. The loot should be found in director-only corp hangers. Only put the amount listed as 'qty' in your cargohold. Do not put more or less. If there isn't enough in the corp's hanger to meet the qty requirement shown here, then something is wrong -- please consult the other directors as to what may have happened; chances are someone typed in the wrong amount when recording loot, or it might be in another hanger.</p>
+		<p>2) Haul the loot to a trade station and sell. When you sell the loot, record the total amount each one sold for. For example, if 30 Melted Nanoribbons sold for 180mil ISK total, type in 180000000 for Melted Nanoribbons. <strong>Remember:</strong> sometimes you might sell loot to multiple people's buy orders. If this happens, you'll have to sell that loot multiple times. Remember to add the totals up and put the total here. Also, decimals aren't needed, so don't put them here.</p>
+		<hr />";
+
+	if (isset($error)) { echo $error; }
 	$form->display_form();
 }
 else {
 
-	echo "<h2>Sell Stash</h2>";
 	$ops = $DB->qa("
 		SELECT operations.opID, operations.title, memberList.name AS owner, SUM((invTypes.volume*lootData.amount)) AS volume FROM `operations` 
 		NATURAL LEFT JOIN op2sale

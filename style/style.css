@@ -6,45 +6,16 @@
  * Commented properties are things that I tired to use, but didn't work out so well. I keep them here in case i want another shot at it =)
  */
 
-* { /* Get rid of browser defaults */ 
-  margin:  0; 
-  padding: 0;
-}
-
-html {
-    font-size:  75%; /* Set default font to 12px */
-}
+* { margin:  0; padding: 0; }
+html { font-size:  75%; }
 
 body {
 	width:       700px;
 	margin:      0 auto; 
     font-family: Tahoma,Arial,Helvetica,sans-serif;
     font-size:   1em;
-    line-height: 1.5em;
-}
+    line-height: 1.5em; }
 
-/*
-#menu-wrapper {
-    border-width: 0 1px 1px;
-}
-
-#menu-wrapper {
-    background-color: #F1F7FE;
-    border-color: #8F9AA7 #C1CAD5 #C1CAD5;
-    border-style: solid;
-    border-width: 1px;
-}
-
-ul#menu li{    
-	display: inline;
-    margin: 0;
-}
-
-ul#nav li a:hover, ul#nav li a.active {
-    background-color: #FFFFFF;
-    padding-top: 8px;
-}
-*/
 ul#menu {
 	clear: both;
 	background-color: #F1F7FE;
@@ -57,102 +28,36 @@ ul#menu {
 	font-weight:bold;
 	width:auto;
 	font-family:Arial, Helvetica, sans-serif;
-	
-	    border-color: #8F9AA7 #C1CAD5 #000000;
+	border-color: #8F9AA7 #C1CAD5 #000000;
     border-style: solid;
-    border-width: 1px;
-	
-		/*	border-bottom:1px solid #000000;
-	border-top:1px solid #000000;
+    border-width: 1px; }
 
-	margin:0;
-	padding:0;
-
-
-	position:relative;
-	display:block;
-	height:30px;
-	font-size:12px;
-
-	
-
-	*/
-}
-
-ul#menu li {
-	display:inline;
-	/*float:left;
-	margin:0;
-	padding:0;*/
-}
+ul#menu li { display:inline; }
 	
 ul#menu li a {
-
-   color: #535353;
+	color: #535353;
     display: inline-block;
     height: 30x;
     line-height: 31px;
     padding: 0 1em;
-    text-decoration: none;
-	
-	/*
-	display:block;
-	float:center;
-	color:#999999;
-	text-decoration:none;
-	font-weight:bold;
-	padding:8px 20px 0 20px;*/
-}
+    text-decoration: none; }
 	
 ul#menu li:hover {	
     color: #000000;
 	border-bottom: 2px solid #000000;
-	padding-bottom: 5px;
-}
-ul#menu a:hover {	
-    color: #000000;
-}
+	padding-bottom: 5px; }
+
+ul#menu a:hover {	color: #000000; }
 	
-ul#menu li a.current
-{
+ul#menu li a.current {
 	/* -1 margins to make up for the added border pixels */
 	margin:-1px;
 	border-color: #000000;
     border-style: solid;
     border-width: 1px 1px 0px;
     background-color: #E7F1FD;
-    color: #000000;
-}
+    color: #000000; }
 
-/*
-@import "agent.css";
-body {
-    margin: 0;
-    width: 100%;
-}
-#body-wrapper {
-    margin: 0 auto;
-    width: 800px;
-}
-#header {
-    border-color: #8F9AA7;
-    border-width: 0 0 1px;
-}
-#content {
-    background-color: transparent;
-    border: 0 none;
-}
-#menu-wrapper {
-    border-width: 0 1px 1px;
-}
-ul#nav li a {
-    margin: 0 -3px 0 -2px;
-}
-ul#nav li a:hover, ul#nav li a.active {
-    background-color: #FFFFFF;
-    padding-top: 8px;
-}
-*/
 #content {
     background-color: #E7F1FD;
     border-bottom-left-radius: 12px;
@@ -162,55 +67,37 @@ ul#nav li a:hover, ul#nav li a.active {
     border-width: 0 1px 1px;
     font-size: 11px;
     margin-bottom: 18px;
-    padding: .7em;
-	
-	}
-	h2 {
-		margin: .4em 0;
-		text-align: center;}
-		
-	fieldset {
-		border: none; }
-		
-	
-	legend{
-		font-size: 16px;
-		font-weight: bold;
-		padding: .5em;
-		margin: .2em 0;
+    padding: .7em; }
 
-	}
+h2 { margin: .4em 0; text-align: center; }
+fieldset { border: none; }
 
-	#crntOps{
-		float; left;
-		width: 348px;
-	}
-		table{
-		margin: 0 auto;}
-	
-	#lastOps{
+legend{
+	font-size: 16px;
+	font-weight: bold;
+	padding: .5em;
+	margin: .2em 0; }
 
-padding-top: 2em;
-		clear: both;}
-		
-	td, th {
-		padding: 2px 4px; }
+#crntOps{ float; left; width: 348px; }
+#lastOps{ padding-top: 2em; clear: both; }
+
+table{ margin: 0 auto; }
+td, th { padding: 2px 4px; }
 	
 	
-	#transferOwnership,#endOp  { width: 300px; margin-bottom: .5em; }
-	#transferOwnership{float: right;}
-	#endOp {float: left;}
-	#salvageInfo { clear: both; }
+#transferOwnership, #endOp  { width: 300px; margin-bottom: .5em; }
+#transferOwnership{ float: right; }
+#endOp { float: left; }
+#salvageInfo { clear: both; }
 	
-	#transferOwnership form, #endOp form, #members button {
-		display: block; text-align: center;
-margin: 0 auto;		}
-		
-	
+#transferOwnership form, #endOp form, #members button { 
+	display: block; 
+	text-align: center; 
+	margin: 0 auto; }
+
 #opCreate legend {
 	display: none;
 	text-align: center; }
-		
 
 #opCreate {
 	float:right;
@@ -218,28 +105,21 @@ margin: 0 auto;		}
 	border-left: 3px dotted #333; 
 	padding-left:35px;
 	margin-left:20px;
-	position:relative;
-}
+	position:relative; }
 	
-	#opCreate span {
-	
+#opCreate span {
 	position:absolute;
-width:20px;
-height:40px;
-display:block;
-background:#E7F1FD;
- }
+	width:20px;
+	height:40px;
+	display:block;
+	background:#E7F1FD;
+}
 
-	#opCreate span.top {
-	top:-4px;
-left:-4px; }
-
-	#opCreate span.bottom {
-	display: none;
-	bottom:-4px;
-	left:-4px; }
+#opCreate span.top { top:-4px; left:-4px; }
+#opCreate span.bottom { display: none; bottom:-4px; left:-4px; }
 
 #header { padding: 1em; }
+
 #userbox {
     background-color: #E7F1FD;
     border-color: #8F9AA7 #C1CAD5 #C1CAD5;
@@ -250,57 +130,44 @@ left:-4px; }
 	position: relative;
 	right: 0px;
 	top: -13px;
-
-	padding:.5em;
-}
-#userbox legend { display: none; ;}
-#userbox span {float: left;}
-#userbox form {float: right;margin-left: 15px; display: inline-block;}
-
+	padding: .5em; }
+#userbox legend { display: none; }
+#userbox span { float: left; }
+#userbox form { float: right; margin-left: 15px; display: inline-block; }
 #opBox { float:right; }
 
-
-.errors, .note, .success {
-    background-color: #FFC4C4;
-    border: 1px solid #FF0000;
+.note, .success, .error {
     border-bottom-right-radius: 12px;
     border-top-left-radius: 12px;
-    padding: 5px;
-}
-.note {
-	background-color:#E3E9F2; border:1px solid #C1CAD5;
-}
-h1 {margin:.5em;}
+    padding: 5px; }
+.note { background-color: #E3E9F2; border: 1px solid #C1CAD5; }
+.success { background-color: #E6F8DE; border: 1px solid #4C9A20; }
+	
+
+h1 { margin: .5em; }
+
 input, button, textarea{
-        border:      1px solid #CCCCCC;
-        font-family: Helvetica,Tahoma,Arial,sans-serif;
-        font-size:   11px;
-		background-color: #F0F0F0;
-    }
+    border:      1px solid #CCCCCC;
+    font-family: Helvetica,Tahoma,Arial,sans-serif;
+    font-size:   11px;
+	background-color: #F0F0F0; }
 
-    input:focus, select:focus, textarea:focus {
-        border-color: #000; }
+input:focus, select:focus, textarea:focus { border-color: #000; }
 
-   select {
-        border:      1px solid #CCCCCC;
-        font-family: Tahoma,Arial,Helvetica,sans-serif;
-        font-size:   11px;
-    }
+select {
+    border:      1px solid #CCCCCC;
+    font-family: Tahoma,Arial,Helvetica,sans-serif;
+    font-size:   11px; }
     
-     option {
-        padding: 0 .5em;
-		}
+option { padding: 0 .5em; }
     
-    fieldset.submit {  
-        border-style: none;
-        margin: 0.75em 0;
-        padding: 5px;
-        clear:both;
-    }
+fieldset.submit {  
+    border-style: none;
+    margin: 0.75em 0;
+    padding: 5px;
+    clear: both; }
     
-     input, button {
-        padding: .125em .5em;
-    }
+input, button { padding: .125em .5em; }
 
 #lootsubmit dt, #sellLoot dt , #lt-payOut dt {
     clear: both;
@@ -308,14 +175,13 @@ input, button, textarea{
     float: left;
     height: 32px;
     line-height: 32px;
-    width: 280px;
-}
+    width: 280px; }
+	
 #lootsubmit dd, #sellLoot dd, #lt-payOut dd {
     float: left;
     height: 32px;
     line-height: 32px;
-	padding-right: 5px;
-}
+	padding-right: 5px; }
 
 #groups dt {
     clear: both;
@@ -323,65 +189,68 @@ input, button, textarea{
     float: left;
     height: 24px;
     line-height: 24px;
-    width: 50px;
-}
+    width: 50px; }
+	
 #groups dd {
     float: left;
     height: 24px;
     line-height: 24px;
-	padding-right: 5px;
-}
+	padding-right: 5px; }
+
 span.clear { display:none; clear: both; }	
 .submit { text-align: center; clear: both; }
-#sellLoot button {  margin-top: .5em;  }
+#sellLoot button { margin-top: .5em; }
 
+.error { background-color: #FFC4C4; border: 1px solid #FF0000; }
+	
+.error > span {
+	font-size: 1.1em;
+	display: block;
+	text-align: center;
+	font-weight: bold; }
 
 hr { margin: .7em 0; }
-p {
-    margin-top: 0.75em;
-    text-align: justify;
-}
+p { margin-top: 0.75em; text-align: justify; }
 
 #footer {
     border-top: 0.0833em solid #666666;
     clear: both;
     padding: 0.75em 0;
-    text-align: center;
-}
+    text-align: center; }
+	
 #footer p {
     color: #666666;
     margin: 0;
-    text-align: center;
-}
+    text-align: center; }
 
 
-#lootsubmit .odd, #sellLoot .odd, #lt-payOut .odd { background: #F1F7FE; border-top: 1px solid black; border-bottom: 1px solid black; }
+#lootsubmit .odd, #sellLoot .odd, #lt-payOut .odd { 
+	background: #F1F7FE; 
+	border-top: 1px solid black; 
+	border-bottom: 1px solid black; }
 
 #fs-groupsSet dt{ display: none; }
  
- #content ul {
- list-style-type: none; }
+#content ul { list-style-type: none; }
  
- #content ul li
- {	
-
- height: 32px;
- line-height: 32px;
- 
- }
- #content ul li:before {
-	content: "\00BB \0020";
-	}
-
-.greenbox{ }
-
-#members { clear: both; }
-
-#memberForm dd { display: none; }
-#memberForm dt { float: left; width: 170px;     height: 32px;
-    line-height: 32px;}
+#content ul li {	
+	height: 32px;
+	line-height: 32px; }
 	
-	/*
+#content ul li:before { content: "\00BB \0020"; }
+#members { clear: both; }
+#memberForm dd { display: none; }
+
+#memberForm dt { 
+	float: left; 
+	width: 170px;
+	height: 32px;
+    line-height: 32px; }
+	
+#memberForm { margin: 0 auto;}	
+
+
+/*
 	Doesn't work
 #memberForm input[type="checkbox"][checked] {
 background-color: #E6F8DE;
@@ -391,5 +260,5 @@ background-color: #E6F8DE;
 /* Was supposed to start a new row every 4 elements. This is handeled automatically from the floats wrapping around
 dt:nth-child(3n+2) { background: #F1F7FE; border-top: 1px solid black; border-bottom: 1px solid black; }
 */
-#memberForm { margin: 0 auto;}
+
 
