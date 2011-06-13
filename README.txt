@@ -1,5 +1,6 @@
 Install:
 
+- Edit /inc/db-sample.ini and move to a directory inaccessable to the outside.
 - Run inc/lootTracker.sql to build database tables.
 - Run memberRefresh.php to fetch member list. This needs to run on a regular basis to keep up-to-date
 - Open _.php and edit any configs you need (site name, tax, etc...)

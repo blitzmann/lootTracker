@@ -18,6 +18,8 @@ define('CORPTIC', 'M.DYN');
 define('CORPID', 98022296);
 define('TAX', .1); //Tax. 1 = 100%, .35 = 35%, etc
 define('DEVELOPER', true); // If true, prints out errors on page in the footer
+define('DBVERSION', 'Dominion 1.0.1'); // static DB version, shows up in footer
+define('SECRET', '../../../private/db-lootTracker.ini'); // path to secret DB file
 
 $ingame = substr($_SERVER['HTTP_USER_AGENT'],-7) === 'EVE-IGB';
 if ($ingame) {
@@ -49,7 +51,7 @@ set_exception_handler('e_handler');
 class InvalidInput extends Exception {}
 
 try {
-	$DB = new DB(parse_ini_file('../../../private/db-lootTracker.ini'));
+	$DB = new DB(parse_ini_file(SECRET));
 }
 catch ( PDOException $e ) {
     echo 'Database connection failed. PDOException:';

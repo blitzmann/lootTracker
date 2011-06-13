@@ -153,7 +153,7 @@ class Page {
 		echo
 		"</div></div></div><div id='footer'>";
 		$end = microtime(true);
-		printf('<p>Copyright &copy; 2011 Ryan Holmes, aka Sable Blitzmann | gitRev: %.8s | Database dump: Dominion 1.0.1 | %01.002fms (%0.5fs)</p>', `git rev-parse --verify HEAD`, ($end - START) * 1000, $end - START);
+		printf('<p>Copyright &copy; 2011 Ryan Holmes, aka Sable Blitzmann | gitRev: %.8s | Database dump: '.DBVERSION.' | %01.002fms (%0.5fs)</p>', `git rev-parse --verify HEAD`, ($end - START) * 1000, $end - START);
 		echo "</div>\n\n</body>\n</html>";
 		
 		exit;
