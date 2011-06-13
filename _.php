@@ -1,4 +1,10 @@
 <?php
+
+/*
+ * Copyright (C) 2011 Ryan Holmes
+ * <http://www.gnu.org/licenses/agpl.html>
+ */
+ 
 ob_start("ob_gzhandler"); 
 session_start();
 

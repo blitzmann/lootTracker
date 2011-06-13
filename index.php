@@ -1,5 +1,10 @@
 <?php
 
+/*
+ * Copyright (C) 2011 Ryan Holmes
+ * <http://www.gnu.org/licenses/agpl.html>
+ */
+ 
 require '_.php';
 
 

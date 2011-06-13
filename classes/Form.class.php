@@ -11,12 +11,11 @@
 	
 	Some of the code I hacked together to add support for form arrays
 	(passing things like name[] for text inputs and whatnot)
-	Look more into this at a later date. Only text is supported for now
+	Look more into this at a later date.
 	
 	Only supports name and name[], not name[][] or more
 	
-	I also added fieldset support. =D
-	numeric
+	I also added fieldset and numeric input support. =D
 	
 	TODO: add confirm() to display submitted values
 */
