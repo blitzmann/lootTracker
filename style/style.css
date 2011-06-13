@@ -16,6 +16,22 @@ body {
     font-size:   1em;
     line-height: 1.5em; }
 
+#userbox {
+    background-color: #E7F1FD;
+    border-color: #8F9AA7 #C1CAD5 #C1CAD5;
+    border-radius: 0px 0px 5px 5px;
+    border-style: solid;
+    border-width: 1px;
+	float: right;
+	position: relative;
+	right: 0px;
+	top: -13px;
+	padding: .5em; }
+
+#userbox legend { display: none; }
+#userbox span { float: left; }
+#userbox form { float: right; margin-left: 15px; display: inline-block; }
+
 ul#menu {
 	clear: both;
 	background-color: #F1F7FE;
@@ -58,6 +74,8 @@ ul#menu li a.current {
     background-color: #E7F1FD;
     color: #000000; }
 
+#header { padding: 1em; }
+
 #content {
     background-color: #E7F1FD;
     border-bottom-left-radius: 12px;
@@ -68,6 +86,14 @@ ul#menu li a.current {
     font-size: 11px;
     margin-bottom: 18px;
     padding: .7em; }
+	
+#content ul { list-style-type: none; }
+ 
+#content ul li {	
+	height: 32px;
+	line-height: 32px; }
+	
+#content ul li:before { content: "\00BB \0020"; }
 
 h2 { margin: .4em 0; text-align: center; }
 fieldset { border: none; }
@@ -78,13 +104,32 @@ legend{
 	padding: .5em;
 	margin: .2em 0; }
 
-#crntOps{ float; left; width: 348px; }
-#lastOps{ padding-top: 2em; clear: both; }
-
 table{ margin: 0 auto; }
 td, th { padding: 2px 4px; }
+
+h1 { margin: .5em; }
+
+input, button, textarea{
+    border:      1px solid #CCCCCC;
+    font-family: Helvetica,Tahoma,Arial,sans-serif;
+    font-size:   11px;
+	background-color: #F0F0F0; }
+
+input:focus, select:focus, textarea:focus { background-color: #FFFFFF; border-color: #000; }
+option { padding: 0 .5em; }
+input, button { padding: .125em .5em; }
+
+select {
+    border:      1px solid #CCCCCC;
+    font-family: Tahoma,Arial,Helvetica,sans-serif;
+    font-size:   11px; }
 	
-	
+span.clear { display:none; clear: both; }	
+hr { margin: .7em 0; }
+p { margin-top: 0.75em; text-align: justify; }
+
+#crntOps{ float; left; width: 348px; }
+#lastOps{ padding-top: 2em; clear: both; }
 #transferOwnership, #endOp  { width: 300px; margin-bottom: .5em; }
 #transferOwnership{ float: right; }
 #endOp { float: left; }
@@ -106,68 +151,20 @@ td, th { padding: 2px 4px; }
 	padding-left:35px;
 	margin-left:20px;
 	position:relative; }
+
 	
+/* These 3 make some of the border disappear for a more pleasing visual */
 #opCreate span {
-	position:absolute;
-	width:20px;
-	height:40px;
-	display:block;
-	background:#E7F1FD;
-}
+	position: absolute;
+	width: 20px;
+	height: 40px;
+	display: block;
+	background: #E7F1FD; }
 
 #opCreate span.top { top:-4px; left:-4px; }
 #opCreate span.bottom { display: none; bottom:-4px; left:-4px; }
 
-#header { padding: 1em; }
-
-#userbox {
-    background-color: #E7F1FD;
-    border-color: #8F9AA7 #C1CAD5 #C1CAD5;
-    border-radius: 0px 0px 5px 5px;
-    border-style: solid;
-    border-width: 1px;
-	float: right;
-	position: relative;
-	right: 0px;
-	top: -13px;
-	padding: .5em; }
-#userbox legend { display: none; }
-#userbox span { float: left; }
-#userbox form { float: right; margin-left: 15px; display: inline-block; }
 #opBox { float:right; }
-
-.note, .success, .error {
-    border-bottom-right-radius: 12px;
-    border-top-left-radius: 12px;
-    padding: 5px; }
-.note { background-color: #E3E9F2; border: 1px solid #C1CAD5; }
-.success { background-color: #E6F8DE; border: 1px solid #4C9A20; }
-	
-
-h1 { margin: .5em; }
-
-input, button, textarea{
-    border:      1px solid #CCCCCC;
-    font-family: Helvetica,Tahoma,Arial,sans-serif;
-    font-size:   11px;
-	background-color: #F0F0F0; }
-
-input:focus, select:focus, textarea:focus { border-color: #000; }
-
-select {
-    border:      1px solid #CCCCCC;
-    font-family: Tahoma,Arial,Helvetica,sans-serif;
-    font-size:   11px; }
-    
-option { padding: 0 .5em; }
-    
-fieldset.submit {  
-    border-style: none;
-    margin: 0.75em 0;
-    padding: 5px;
-    clear: both; }
-    
-input, button { padding: .125em .5em; }
 
 #lootsubmit dt, #sellLoot dt , #lt-payOut dt {
     clear: both;
@@ -196,22 +193,24 @@ input, button { padding: .125em .5em; }
     height: 24px;
     line-height: 24px;
 	padding-right: 5px; }
-
-span.clear { display:none; clear: both; }	
-.submit { text-align: center; clear: both; }
-#sellLoot button { margin-top: .5em; }
-
-.error { background-color: #FFC4C4; border: 1px solid #FF0000; }
 	
-.error > span {
-	font-size: 1.1em;
-	display: block;
-	text-align: center;
-	font-weight: bold; }
+#lootsubmit .odd, #sellLoot .odd, #lt-payOut .odd { 
+	background: #F1F7FE; 
+	border-top: 1px solid black; 
+	border-bottom: 1px solid black; }
 
-hr { margin: .7em 0; }
-p { margin-top: 0.75em; text-align: justify; }
+#fs-groupsSet dt{ display: none; }
+#sellLoot button { margin-top: .5em; }
+#members { clear: both; }
+#memberForm { margin: 0 auto;}
+#memberForm dd { display: none; }
 
+#memberForm dt { 
+	float: left; 
+	width: 170px;
+	height: 32px;
+    line-height: 32px; }
+	
 #footer {
     border-top: 0.0833em solid #666666;
     clear: both;
@@ -223,32 +222,21 @@ p { margin-top: 0.75em; text-align: justify; }
     margin: 0;
     text-align: center; }
 
-
-#lootsubmit .odd, #sellLoot .odd, #lt-payOut .odd { 
-	background: #F1F7FE; 
-	border-top: 1px solid black; 
-	border-bottom: 1px solid black; }
-
-#fs-groupsSet dt{ display: none; }
- 
-#content ul { list-style-type: none; }
- 
-#content ul li {	
-	height: 32px;
-	line-height: 32px; }
+.note, .success, .error {
+    border-bottom-right-radius: 12px;
+    border-top-left-radius: 12px;
+    padding: 5px; }
+.note { background-color: #E3E9F2; border: 1px solid #C1CAD5; }
+.success { background-color: #E6F8DE; border: 1px solid #4C9A20; }
+.error { background-color: #FFC4C4; border: 1px solid #FF0000; }
 	
-#content ul li:before { content: "\00BB \0020"; }
-#members { clear: both; }
-#memberForm dd { display: none; }
+.error > span {
+	font-size: 1.1em;
+	display: block;
+	text-align: center;
+	font-weight: bold; } 
 
-#memberForm dt { 
-	float: left; 
-	width: 170px;
-	height: 32px;
-    line-height: 32px; }
-	
-#memberForm { margin: 0 auto;}	
-
+.submit { text-align: center; clear: both; }
 
 /*
 	Doesn't work

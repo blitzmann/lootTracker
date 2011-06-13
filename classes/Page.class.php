@@ -38,7 +38,7 @@ class Page {
 		//"		<h2>".SUB_HEAD."</h2>\n".
 	//	"	<p class='hide'><a href='#content'>Skip to content</a></p>\n".
 		"	<p class='note'><strong>Notice:</strong> Don't use the back button. I dunno why, but it'll cause a 400 error.</p>".
-		"	</div>\n";
+		"	</div>\n".
 		"	<div id='menu-wrapper'>";
 		
 		// Start NAVIGATION
