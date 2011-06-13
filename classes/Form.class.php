@@ -120,7 +120,7 @@ class Form {
 	}
 	
 	function update_values_from_post() {
-
+	
 		$params = func_get_args();
 		assert('count($params) <= 2');
 		if (count($params) === 0){
@@ -133,7 +133,7 @@ class Form {
 			if (!isset($field_info['type'])) {
 				self::update_values_from_post($field_info, $id); }
 			else {
-				if ($field_info['type'] != file) {
+				if ($field_info['type'] != file && $field_info['type'] != fieldset) {
 					if (isset($parent)) {
 						$this->fields[$parent][$id]['value'] = ($field_info['type'] == checkbox ? isset($_POST[$parent][$id]) : $_POST[$parent][$id]); }
 					else {
@@ -379,8 +379,8 @@ class Form {
 
 		foreach ($fields as $id => $field_info) {
 		
-			if (!isset($field_info['type'])) { // should we add a break; here also??
-				self::validate($field_info, $id); }
+			if (!isset($field_info['type'])) {
+				self::validate($field_info, $id); break; }
 				
 			if (isset($this->conditions[$id]))
 				foreach ($this->conditions[$id] as $title => $condition)

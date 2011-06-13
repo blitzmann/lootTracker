@@ -113,7 +113,7 @@ else {
 	echo "<form action='".$_SERVER['PHP_SELF']."' method='post'>\n<ul>\n";
 	foreach ($ops AS $op) {
 		echo "
-			<li><label for='".$op['opID']."_'><input id='".$op['opID']."_' type='checkbox' name='opSelect[]' value='".$op['opID']."' /><img style='height: 100%; vertical-align: middle;' src='http://evefiles.capsuleer.de/icons/32_32/icon53_16.png' /> <em>".$op['title']."</em> -- ".$op['owner']." (total volume of op: <strong>".$op['volume']."m<sup>3</sup></strong>)</label></li>";
+			<li><label for='".$op['opID']."_'><input id='".$op['opID']."_' type='checkbox' name='opSelect[]' value='".$op['opID']."' /><img style='height: 100%; vertical-align: middle;' src='http://evefiles.capsuleer.de/icons/32_32/icon53_16.png' /> <em>".$op['title']."</em> -- ".$op['owner']." (total volume of op: <strong>".ceil($op['volume'])."m<sup>3</sup></strong>)</label></li>";
 	}
 	echo "<button name='submitOpSale' type='submit'>Go!</button></form>";
 	

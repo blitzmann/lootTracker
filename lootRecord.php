@@ -77,7 +77,8 @@ if ($form->check_fields_exist()) {
 
 		echo 
 		"<h2>Loot submited</h2>".
-		"<p>You may now drop off the loot at any station or POS in which the corp owns a hanger. The specific hanger is called <strong><tt>CEO Secret Stash</tt></strong>. Note that you may not be able to view items in this hanger, but everyone is able to add items to it.</p>";
+		"<p>You may now drop off the loot at any station or POS in which the corp owns a hanger. The specific hanger is called <strong><tt>CEO Secret Stash</tt></strong>. Note that you may not be able to view items in this hanger, but everyone is able to add items to it.</p>
+		<p>Alternatively, you can private contract all the loot directly to a corp director and they should be able to pick it up at their leasure. Make sure the contract is in high or lowsec (no nullsec).</p>";
 		
 		$Page->footer();
 	}

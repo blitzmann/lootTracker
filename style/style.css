@@ -336,7 +336,7 @@ span.clear { display:none; clear: both; }
 #sellLoot button {  margin-top: .5em;  }
 
 
-hr { margin-top: .7em; }
+hr { margin: .7em 0; }
 p {
     margin-top: 0.75em;
     text-align: justify;

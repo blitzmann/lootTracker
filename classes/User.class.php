@@ -17,7 +17,7 @@ class User extends EveApiRoles {
 	public $is_logged_in  = false;
 	
 	var $stuff = array();
-
+	
 	/**
      * Create a new user object. This is mostly called by the login functions
      *
@@ -201,7 +201,7 @@ class User extends EveApiRoles {
 		setcookie($name, $value, $expiry, dirname($_SERVER['SCRIPT_NAME']), $_SERVER['HTTP_HOST']);
     }
 	
-	function generateHash($plainText, $salt = null) {
+	static function generateHash($plainText, $salt = null) {
 		if ($salt === null) {
 			$salt = substr(md5(uniqid(rand(), true)), 0, SALT_LENGTH); }
 		else {
