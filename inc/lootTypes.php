@@ -1,5 +1,12 @@
 <?php
 
+/*
+ *	Here is where you can list what you want to show on the loot record page.
+ *	Key is the title for the group, Value is the SQL query used to fetch 
+ *	the items. lootTracker expects all of them to come from the invTypes
+ *	static DB dump
+ */
+
 $lootTypes = array(
 	'Datacores'                     => 'SELECT * FROM invTypes WHERE groupID = 333 AND marketGroupID IS NOT NULL',
 	'Decryptors'                    => 'SELECT * FROM invTypes WHERE groupID = 979',
