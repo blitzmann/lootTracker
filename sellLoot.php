@@ -8,9 +8,9 @@
 $title = 'Sell Loot';
 
 require '_.php';
-//unset($_SESSION['sellLootOps']);
-//if ($User->hasRole('director')){
-//	$Page->errorfooter('Sorry, but only Directors or other trusted members can access the loot container, and thus sell it.'); }
+
+if (!$User->hasRole('director')){
+	$Page->errorfooter('Sorry, but only Directors or other trusted members can access the loot container, and thus sell it.'); }
 
 echo "<h2>Sell Stash</h3>";
 

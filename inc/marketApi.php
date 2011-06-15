@@ -38,6 +38,7 @@ function get_data($url, $post) {
 	$ch = curl_init();
 	$timeout = 5;
 	curl_setopt($ch,CURLOPT_URL,$url);
+	curl_setopt($ch,CURLOPT_USERAGENT,'lootTracker - EVE Online Loot Tracking Web Software Thing');
 	curl_setopt($ch,CURLOPT_POSTFIELDS,$post);
 	curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
 	curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,$timeout);

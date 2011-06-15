@@ -8,6 +8,8 @@
 $title = 'Pay Out';
 require '_.php';
 
+if (!$User->hasRole('director')){
+	$Page->errorfooter('Sorry, but only Directors or other trusted members can access the loot container, and thus sell it.'); }
 
 if (filter_has_var(INPUT_POST, 'submitPayed')){
 		// todo: if refreshed, payment info will be updated again... Don't do that
