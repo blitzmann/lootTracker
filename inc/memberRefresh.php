@@ -34,7 +34,13 @@ function get_data($url) {
 	return $data;
 }
 
-$members = new SimpleXMLElement(get_data($memberURL));
+$data = get_data($memberURL);
+
+if (!$data) { exit; } // if failed (server is offline or whatever), just stop. Otherwise, Member List would be deleted and replaced with nothing.
+
+$members = new SimpleXMLElement($data);
+
+
 
 $membersNew = array();
 

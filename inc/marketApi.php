@@ -45,10 +45,11 @@ function get_data($url, $post) {
 	curl_close($ch);
 	return $data;
 }
+$data = get_data($url, $fields);
+if (!$data) { exit; }
+$market = new SimpleXMLElement($data);
 
-$market = new SimpleXMLElement(get_data($url, $fields));
-
-$DB->query('TRUNCATE TABLE `memberList`');
+$DB->query('TRUNCATE TABLE `marketData`');
 
 foreach ($market->marketstat->type AS $type){
 	$DB->ea("INSERT INTO `marketData` (`typeID`, `medianBuy`) VALUES (?, ?)", array((int)$type['id'], (float)$type->buy->median));

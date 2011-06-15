@@ -99,12 +99,41 @@ if (isset($_SESSION['opID'])) {
 		";
 		
 	}
-		echo "
+	echo "
 		<div id='salvageInfo'>
 			<h2>Salvager Info</h2>
 			<p>Are you this operation's salvager? Do you control the loot? Are you ready to stow it away in the corp hanger? If so, please head over to the <a href='lootRecord.php'>Loot Record</a> page whenever you're ready to drop it off.</p>
 		</div>\n";
 
+		
+	$loots = $DB->qa("
+		SELECT invTypes.typeName, marketData.medianBuy, SUM(amount) AS total FROM lootData
+		NATURAL JOIN groups
+		NATURAL JOIN operations
+		INNER JOIN invTypes ON (lootData.typeID = invTypes.typeID)
+		INNER JOIN marketData ON (lootData.typeID = marketData.typeID)
+		WHERE opID = ?
+		GROUP BY lootData.typeID", array($_SESSION['opID']));
+		
+	echo "
+		<div id='lootInfo'>
+			<h2>Recorded Loot</h2>
+			<p>Below is the loot that has been recorded for the entire operation (groups not taken into account), along with the estimated profit based on the median buy prices in Jita.</p>
+			<table>
+				<tr><th>Loot</th><th>Amount</th><th>Profit</th></tr>";
+	$total = 0;
+	foreach ($loots AS $loot) {
+		$profit = ((float)$loot['total']*(float)$loot['medianBuy']);
+		$total = $total + (float)$profit;
+		echo "
+				<tr><td>".$loot['typeName']."</td><td>".$loot['total']."</td><td>".number_format($profit)."</td></tr>";
+		
+	}
+	echo "
+				<tr><td colspan='3' style='text-align: right;'>Total: ".number_format($total)."</td></tr></table>
+		</div>\n";
+		
+		
 	$Page->footer();
 }
 else{
