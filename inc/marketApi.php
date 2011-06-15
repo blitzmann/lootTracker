@@ -5,10 +5,22 @@
  * <http://www.gnu.org/licenses/agpl.html>
  */
  
-require '_.php';
-echo "<pre>";
-$types = array();
+$cfg = parse_ini_file('../inc/config.ini'); 
+require 'lootTypes.php';
 
+function __autoload($name) {
+    include '../classes/'.$name.'.class.php'; }
+	
+try {
+	$DB = new DB(parse_ini_file($cfg['db_file']));
+}
+catch ( PDOException $e ) {
+    echo 'Database connection failed. PDOException:';
+    echo $e->getMessage();
+    die('=/');
+}
+
+$types = array();
 $url = 'http://api.eve-central.com/api/marketstat';
 $system = 30000142;
 
@@ -34,36 +46,13 @@ function get_data($url, $post) {
 	return $data;
 }
 
-
-
 $market = new SimpleXMLElement(get_data($url, $fields));
+
+$DB->query('TRUNCATE TABLE `memberList`');
 
 foreach ($market->marketstat->type AS $type){
 	$DB->ea("INSERT INTO `marketData` (`typeID`, `medianBuy`) VALUES (?, ?)", array((int)$type['id'], (float)$type->buy->median));
 }
 
 echo "Done.";
-/*
-
-
-$apiDetails = parse_ini_file('../../../private/apiDetails.ini'); // path to protected file (outside of web root) containing director API key
-$memberURL = "http://api.eve-online.com/corp/MemberTracking.xml.aspx?useriD=$apiDetails[userID]&apiKey=$apiDetails[apiKey]&characterID=$apiDetails[charID]";
-unset($apiDeatils);
-
-
-
-$members = new SimpleXMLElement(get_data($memberURL));
-
-$membersNew = array();
-
-$DB->query('TRUNCATE TABLE `memberList`');
-
-foreach($members->result->rowset->row AS $member) {
-	$name = (string)$member['name'];
-	$id = (string)$member['characterID'];
-	$roles = (string)$member['roles'];
-}
-
-echo 'Member list refreshed.';
-*/
 ?> 

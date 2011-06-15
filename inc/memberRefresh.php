@@ -5,11 +5,21 @@
  * <http://www.gnu.org/licenses/agpl.html>
  */
  
-require 'DB.php';
+$cfg = parse_ini_file('../inc/config.ini'); 
 
-$DB = new DB(parse_ini_file('/home/ryan/www/private/db.ini'));
+function __autoload($name) {
+    include '../classes/'.$name.'.class.php'; }
+	
+try {
+	$DB = new DB(parse_ini_file($cfg['db_file']));
+}
+catch ( PDOException $e ) {
+    echo 'Database connection failed. PDOException:';
+    echo $e->getMessage();
+    die('=/');
+}
 
-$apiDetails = parse_ini_file('../../../private/apiDetails.ini'); // path to protected file (outside of web root) containing director API key
+$apiDetails = parse_ini_file($cfg['api_file']);
 $memberURL = "http://api.eve-online.com/corp/MemberTracking.xml.aspx?useriD=$apiDetails[userID]&apiKey=$apiDetails[apiKey]&characterID=$apiDetails[charID]";
 unset($apiDeatils);
 

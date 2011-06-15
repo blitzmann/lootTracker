@@ -11,15 +11,15 @@ session_start();
 define('START', microtime(true));
 define('SALT_LENGTH', 10);
 
-// Basic config
-define('SITE_NAME', "M.DYN lootTracker");
-define('CORP', 'Massively Dynamic');
-define('CORPTIC', 'M.DYN');
-define('CORPID', 98022296);
-define('TAX', .1); //Tax. 1 = 100%, .35 = 35%, etc
-define('DEVELOPER', true); // If true, prints out errors on page in the footer
-define('DBVERSION', 'Dominion 1.0.1'); // static DB version, shows up in footer
-define('SECRET', '../../../private/db-lootTracker.ini'); // path to secret DB file
+$cfg = parse_ini_file('inc/config.ini');
+
+define('SITE_NAME', $cfg['site_name']);
+define('CORP', $cfg['corp_name']);
+define('CORPTIC', $cfg['corp_ticker']);
+define('CORPID', (float)$cfg['corpid']);
+define('TAX', (float)$cfg['tax']); //Tax. 1 = 100%, .35 = 35%, etc
+define('DEVELOPER', (bool)$cfg['developer']); // If true, prints out errors on page in the footer
+define('DBVERSION', $cfg['db_version']); // static DB version, shows up in footer
 
 $ingame = substr($_SERVER['HTTP_USER_AGENT'],-7) === 'EVE-IGB';
 if ($ingame) {
@@ -51,7 +51,7 @@ set_exception_handler('e_handler');
 class InvalidInput extends Exception {}
 
 try {
-	$DB = new DB(parse_ini_file(SECRET));
+	$DB = new DB(parse_ini_file($cfg['db_file']));
 }
 catch ( PDOException $e ) {
     echo 'Database connection failed. PDOException:';
@@ -86,13 +86,8 @@ else {
     $User = new User;
 }
 
-$lootTypes = array(
-//	'Datacores'                     => 'SELECT * FROM invTypes WHERE groupID = 333 AND marketGroupID IS NOT NULL',
-//	'Decryptors'                    => 'SELECT * FROM invTypes WHERE groupID = 979',
-//	'Intact/Malfunctioning/Wrecked' => 'SELECT * FROM invTypes WHERE groupID = 971 OR groupID =	990 OR groupID = 991 OR groupID = 992 OR groupID = 993 OR groupID = 997',
-//	'Gas'                           => 'SELECT * FROM invTypes WHERE groupID = 711 AND marketGroupID = 1145',
-	'Salvage'                       => 'SELECT * FROM invTypes WHERE groupID = 966',
-	'Loot'                          => 'SELECT * FROM invTypes WHERE groupID = 880');
+require 'inc/lootTypes.php'; // include loot array
+
 
 $Page->nav['Home'] = 'index.php';
 	
