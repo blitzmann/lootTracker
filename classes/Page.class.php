@@ -29,6 +29,7 @@ class Page {
 		"<head>\n".
 		"	<title>".( $this->title ? $this->title.' : '.SITE_NAME : SITE_NAME )."</title>\n".
 		"	<link rel='stylesheet' type='text/css' href='style/style.css' />\n".
+		"	<script type='text/javascript' src='js/jquery.js'></script>\n".
 		"</head>\n\n".
 		"<body id='lt-".basename($_SERVER['SCRIPT_NAME'], '.php')."'>\n\n".
 		"	<div id='header'>\n";

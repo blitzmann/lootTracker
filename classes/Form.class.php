@@ -176,21 +176,23 @@ class Form {
 
 		echo "
 		<form id='$this->id' action='$this->action' method='$this->method'>
-			<dl>\n\n";
+			";
 
 		self::walk($this->fields);
 		
 		foreach ($this->fieldsets AS $id => $label) {
 			echo "
-				<fieldset id='fs-$id'><legend>".$label."</legend>\n";
+				<fieldset id='fs-$id'><legend>".$label."</legend>
+				<dl>\n";
 			foreach ($this->fieldsetQueue[$id] AS $field) {
 				echo $field;
 			}
 			echo "
+				</dl>
 				</fieldset>\n";
 		}
 
-		echo $this->output.'
+		echo '<dl>'.$this->output.'
 			</dl>
 		</form>';
 
