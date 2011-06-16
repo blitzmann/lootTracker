@@ -12,8 +12,26 @@ require '_.php';
 if(!isset($_SESSION['opID'])) {
 	$Page->errorfooter('No operation has been selected. Please go to the operations page and select an operation before recording your loot.', false); }
 
-	echo "<h2>Submit Loot</h2>\n";
+echo "<h2>Submit Loot</h2>\n";
 	
+	
+echo "
+<script language='javascript' type='text/javascript'>
+$(document).ready(function () {
+	$('dl:not(#fs-groupsSet dl)').css('display', 'none');
+	
+	$('legend:not(#fs-groupsSet legend)').prepend('<span class=\'toggle\'>+</span> ');
+	$('legend:not(#fs-groupsSet legend)').toggle(function() {
+		$(this).children().text('-');
+		$(this).next('dl').slideDown('fast');
+	}, function() {
+		$(this).children().text('+');
+		$(this).next('dl').slideUp('fast');
+	});
+});
+</script>	
+";
+
 $groups = $DB->qa("
 	SELECT *, GROUP_CONCAT(name ORDER BY name SEPARATOR ', ') AS members 
 	FROM `groups` NATURAL JOIN `participants` NATURAL JOIN `memberList`

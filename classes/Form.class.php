@@ -355,7 +355,7 @@ class Form {
 		} elseif ($field_info['type'] == submit) {
         
 			$output = sprintf(
-				'<p class=\'submit\'><button id=\'%1$s_\' name=\'%1$s\' type=\'submit\'>%2$s</button></p>'."\n\n",
+				'</dl><p class=\'submit\'><button id=\'%1$s_\' name=\'%1$s\' type=\'submit\'>%2$s</button></p><dl>'."\n\n",
 				$id, $field_info['label']
 			);
         
