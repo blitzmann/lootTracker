@@ -72,11 +72,11 @@ class User extends EveApiRoles {
 	/**
      * The bit that happens when they click "Log In"
      */
-    static function login($charID, $password)
+    static function login($charName, $password)
     {
         global $DB;
 
-		$result = $DB->q("SELECT * FROM `users` WHERE charID = ?", $charID);
+		$result = $DB->q("SELECT * FROM `users` NATURAL JOIN memberList WHERE name = ?", $charName);
         $User = new self(
 			(self::generateHash($password, $result['pass']) === $result['pass'] ? $result['charID'] : null)
 			, true);						 
@@ -119,17 +119,17 @@ class User extends EveApiRoles {
 	/**
      * The bit that happens when they click "Register"
      */
-	static function create($charID, $password) {
+	static function create($charName, $password) {
         global $DB;
 
         $errors = array();
-		// test for corp members only
+		// consolidate queries into 1
 
-        if ($DB->q1('SELECT COUNT(*) FROM users WHERE charID = ?', $charID)) {
-            $errors[] = 'CharacterID "'.$charID.'" is already registered.';
+        if ($DB->q1('SELECT COUNT(*) FROM users NATURAL JOIN memberList WHERE name = ?', $charName)) {
+            $errors[] = 'Character "'.$charName.'" is already registered.';
         }
-		if (!$DB->q1('SELECT COUNT(*) FROM memberList WHERE charID = ?', $charID)) {
-            $errors[] = 'CharacterID "'.$charID.'" is not part of the corp.';
+		if (!$DB->q1('SELECT COUNT(*) FROM memberList WHERE name = ?', $charName)) {
+            $errors[] = 'Character "'.$charName.'" is not part of the corp.';
         }
 
         if ( $errors ) {
@@ -144,7 +144,7 @@ class User extends EveApiRoles {
 */
             return new self;
         }
-
+		$charID = $DB->q('SELECT charID FROM memberList WHERE name = ?', $charName);
         $DB->e('INSERT INTO users (charID, pass) VALUES (?, ?)', $charID, self::generateHash($password));
 
         header('Status: 201');

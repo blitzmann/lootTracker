@@ -29,8 +29,6 @@ if ($ingame) {
 		"1) <a href='' onclick=\"CCPEVE.requestTrust('http://".$_SERVER['HTTP_HOST']."/')\">Request trust</a><br />".
 		"2) <a href='./'>Reload</a></div>"); }
 }
-else {
-	die("This only works in the IGB for now. Maybe I'll get around to making it work for regular browsers..."); } 
 
 function __autoload($name) {
     include './classes/'.$name.'.class.php'; }
@@ -71,13 +69,13 @@ $Page = new Page();
 
 // -- User thing --
 if ( filter_has_var(INPUT_POST, 'register') ) {
-    if ( empty($_SERVER['HTTP_EVE_CHARID']) && empty($_POST['pass']) ) {
+    if ( empty($_POST['charName']) && empty($_POST['pass']) ) {
         $User = new User; }
     else {
-        $User = User::create(filter_input(INPUT_SERVER, 'HTTP_EVE_CHARID'), filter_input(INPUT_POST, 'pass')); }
+        $User = User::create(filter_input(INPUT_POST, 'charName'), filter_input(INPUT_POST, 'pass')); }
 }
 elseif ( filter_has_var(INPUT_POST, 'login') ) {
-    $User = User::login(filter_input(INPUT_SERVER, 'HTTP_EVE_CHARID'), filter_input(INPUT_POST, 'pass'));
+    $User = User::login(filter_input(INPUT_POST, 'charName'), filter_input(INPUT_POST, 'pass'));
 }
 elseif ( filter_has_var(INPUT_COOKIE, 'sessionID') ) {
     $User = User::auth(filter_input(INPUT_COOKIE, 'sessionID'));

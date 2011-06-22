@@ -92,7 +92,7 @@ class Page {
 	}
 
 	public function userbox() {
-		global $User, $DB;
+		global $User, $DB, $ingame;
 		
 		if ($User->is_logged_in == true) {
 		
@@ -112,9 +112,16 @@ class Page {
 		}
 		else {
 			echo
-				"<div style='text-align: center;'><h2>Welcome ".$_SERVER['HTTP_EVE_CHARNAME']."!</h2>".
+				"<div style='text-align: center;'><h1>".SITE_NAME."</h1><br />\n".
 				"<form action='".$_SERVER['PHP_SELF']."' method='post'>".
-				"<input style='text-align:center;' type='password' name='pass' onfocus='if(this.value == \"**********\") { this.value = \"\"; }' value='**********' /><br /><br /><button value ='yes' name='login' type='submit'>Login</button><button name='register' value='yes' type='submit'>Register</button></form></div>";
+				"<input style='text-align:center;' type='text' name='charName'".
+					($ingame ? 
+						" value='".$_SERVER['HTTP_EVE_CHARNAME']."' disabled='disabled'" :
+						" onfocus='if(this.value == \"Character Name\") { this.value = \"\"; }' value='Character Name'"
+					)." /><br /><br />".
+				"<input style='text-align:center;' type='password' name='pass' onfocus='if(this.value == \"**********\") { this.value = \"\"; }' value='**********' /><br /><br /><button value ='yes' name='login' type='submit'>Login</button>".
+				($ingame ? " <button name='register' value='yes' type='submit'>Register</button>" : "<br /><small>You must use the In-Game Browser to register</small>" ).
+				"</form></div>";
 			$this->headers = true;
 			$this->footer();
 		}
