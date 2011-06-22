@@ -114,12 +114,9 @@ class Page {
 			echo
 				"<div style='text-align: center;'><h1>".SITE_NAME."</h1><br />\n".
 				"<form action='".$_SERVER['PHP_SELF']."' method='post'>".
-				"<input style='text-align:center;' type='text' name='charName'".
-					($ingame ? 
-						" value='".$_SERVER['HTTP_EVE_CHARNAME']."' disabled='disabled'" :
-						" onfocus='if(this.value == \"Character Name\") { this.value = \"\"; }' value='Character Name'"
-					)." /><br /><br />".
-				"<input style='text-align:center;' type='password' name='pass' onfocus='if(this.value == \"**********\") { this.value = \"\"; }' value='**********' /><br /><br /><button value ='yes' name='login' type='submit'>Login</button>".
+				"Cahracter Name <input style='text-align:center;' type='text' name='charName'".
+					($ingame ? " value='".$_SERVER['HTTP_EVE_CHARNAME']."'" : null)." /><br /><br />".
+				"Password <input style='text-align:center;' type='password' name='pass' /><br /><br /><button value ='yes' name='login' type='submit'>Login</button>".
 				($ingame ? " <button name='register' value='yes' type='submit'>Register</button>" : "<br /><small>You must use the In-Game Browser to register</small>" ).
 				"</form></div>";
 			$this->headers = true;
