@@ -11,7 +11,7 @@ function __autoload($name) {
     include '../classes/'.$name.'.class.php'; }
 	
 try {
-	$DB = new DB(parse_ini_file($cfg['db_file']));
+	$DB = new DB(parse_ini_file($cfg['secret_file']));
 }
 catch ( PDOException $e ) {
     echo 'Database connection failed. PDOException:';
