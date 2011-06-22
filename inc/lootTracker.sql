@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jun 14, 2011 at 11:47 PM
+-- Generation Time: Jun 22, 2011 at 08:06 AM
 -- Server version: 5.5.13
 -- PHP Version: 5.3.6
 
@@ -207,6 +207,8 @@ CREATE TABLE IF NOT EXISTS `saleViewVerbose` (
 CREATE TABLE IF NOT EXISTS `users` (
   `charID` int(10) unsigned NOT NULL,
   `pass` varchar(50) NOT NULL,
+  `userID` int(8) unsigned NOT NULL,
+  `key` varchar(88) NOT NULL,
   `login_date` int(10) unsigned NOT NULL,
   `login_addr` int(10) unsigned NOT NULL,
   `sessionID` varchar(255) NOT NULL,

@@ -111,14 +111,7 @@ class Page {
 			"</div>\n";
 		}
 		else {
-			echo
-				"<div style='text-align: center;'><h1>".SITE_NAME."</h1><br />\n".
-				"<form action='".$_SERVER['PHP_SELF']."' method='post'>".
-				"<dl><dt>Character Name</dt><dd><input style='text-align:center;' type='text' name='charName'".
-					($ingame ? " value='".$_SERVER['HTTP_EVE_CHARNAME']."'" : null)." /></dd>".
-				"<dt>Password</dt><dd><input style='text-align:center;' type='password' name='pass' /></dd></dl><br /><button value ='yes' name='login' type='submit'>Login</button>".
-				($ingame ? " <button name='register' value='yes' type='submit'>Register</button>" : "<br /><small>You must use the In-Game Browser to register</small>" ).
-				"</form></div>";
+			require "login.php";
 			$this->headers = true;
 			$this->footer();
 		}

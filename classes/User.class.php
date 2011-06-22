@@ -119,17 +119,17 @@ class User extends EveApiRoles {
 	/**
      * The bit that happens when they click "Register"
      */
-	static function create($charName, $password) {
+	static function create($charID, $password, $userID, $apiKey) {
         global $DB;
 
         $errors = array();
-		// consolidate queries into 1
+		// todo: consolidate queries into 1
 
-        if ($DB->q1('SELECT COUNT(*) FROM users NATURAL JOIN memberList WHERE name = ?', $charName)) {
-            $errors[] = 'Character "'.$charName.'" is already registered.';
+        if ($DB->q1('SELECT COUNT(*) FROM users NATURAL JOIN memberList WHERE charID = ?', $charID)) {
+            $errors[] = 'Character is already registered.';
         }
-		if (!$DB->q1('SELECT COUNT(*) FROM memberList WHERE name = ?', $charName)) {
-            $errors[] = 'Character "'.$charName.'" is not part of the corp.';
+		if (!$DB->q1('SELECT COUNT(*) FROM memberList WHERE charID = ?', $charID)) {
+            $errors[] = 'Character is not part of the corp.';
         }
 
         if ( $errors ) {
@@ -144,14 +144,22 @@ class User extends EveApiRoles {
 */
             return new self;
         }
-		$charID = $DB->q('SELECT charID FROM memberList WHERE name = ?', $charName);
-        $DB->e('INSERT INTO users (charID, pass) VALUES (?, ?)', $charID, self::generateHash($password));
+
+        $DB->e('INSERT INTO users (`charID`, `pass`, `userID`, `key`) VALUES (?, ?, ?, ?)', $charID, self::generateHash($password), $userID, self::encrypt($apiKey));
 
         header('Status: 201');
-
-        return self::login($charID, $password);
+		unset($_SESSION['userID']); unset($_SESSION['key']);
+        return self::login($DB->q1('SELECT name FROM memberList WHERE charID = ?', $charID), $password);
     }
 
+	
+	static function encrypt($string) {
+		return trim(base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5(CRYPT_KEY), $string, MCRYPT_MODE_CBC, md5(md5(CRYPT_KEY))))); }
+	
+	
+	static function decrypt($string) {
+		return rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5(CRYPT_KEY), base64_decode($string), MCRYPT_MODE_CBC, md5(md5(CRYPT_KEY))), "\0"); }
+	
 	/*****************
 	 * Magic Methods
 	 */

@@ -48,14 +48,18 @@ set_exception_handler('e_handler');
 
 class InvalidInput extends Exception {}
 
+$secret = parse_ini_file($cfg['secret_file']);
+define('CRYPT_KEY', $secret['salt']);
 try {
-	$DB = new DB(parse_ini_file($cfg['db_file']));
+	$DB = new DB($secret);
 }
 catch ( PDOException $e ) {
     echo 'Database connection failed. PDOException:';
     echo $e->getMessage();
+	unset($secret);
     die('=/');
 }
+unset($secret);
 
 // sanity check
 try {
@@ -69,10 +73,12 @@ $Page = new Page();
 
 // -- User thing --
 if ( filter_has_var(INPUT_POST, 'register') ) {
-    if ( empty($_POST['charName']) && empty($_POST['pass']) ) {
+    if ( empty($_POST['charID']) && empty($_POST['pass']) ) {
         $User = new User; }
     else {
-        $User = User::create(filter_input(INPUT_POST, 'charName'), filter_input(INPUT_POST, 'pass')); }
+		if ($_POST['pass'] == $_POST['pass']) {
+			$User = User::create(filter_input(INPUT_POST, 'charID'), filter_input(INPUT_POST, 'pass'), $_SESSION['userID'], $_SESSION['key']); }
+	}
 }
 elseif ( filter_has_var(INPUT_POST, 'login') ) {
     $User = User::login(filter_input(INPUT_POST, 'charName'), filter_input(INPUT_POST, 'pass'));
