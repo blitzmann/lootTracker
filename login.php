@@ -21,7 +21,7 @@ if (isset($_POST['continue'])){
 	$check = new SimpleXMLElement(get_data($fullCheck));
 	if ((int)$check->error['code'] == 200) {
 		die ('Not a full API'); }
-	
+
 	$data = get_data($url);
 	
 	if (!$data) { die('API Failure, nothing returned from API servers. They may be down or something. Try again later.'); }
@@ -35,7 +35,7 @@ if (isset($_POST['continue'])){
 	}
 	
 	if (empty($char)) {
-		die('None of your character belong to '.CORPTIC.'.'); }
+		die('None of your characters belong to '.CORPTIC); }
 
 	echo
 	"<h1 style='text-align: center;'>".SITE_NAME."</h1><h2>Choose Character</h2>\n".
