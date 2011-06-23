@@ -130,9 +130,9 @@ p { margin-top: 0.75em; text-align: justify; }
 
 #crntOps{ float; left; width: 348px; }
 #lastOps{ padding-top: 2em; clear: both; }
-#transferOwnership, #endOp  { width: 300px; margin-bottom: .5em; }
-#transferOwnership{ float: right; }
-#endOp { float: left; }
+#transferOwnership, #endOp, #resetChar, #editPrecision { width: 300px; margin-bottom: .5em; }
+#transferOwnership, #resetChar { float: right; }
+#endOp, #editPrecision  { float: left; }
 #salvageInfo { clear: both; }
 	
 #transferOwnership form, #endOp form, #members button { 

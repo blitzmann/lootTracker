@@ -129,6 +129,8 @@ if (isset($_SESSION['opID'])) {
 }
 $Page->nav['Sell Stash'] = 'sellLoot.php';
 $Page->nav['Pay Out'] = 'payOut.php';
+if ($User->hasRole('director')){
+	$Page->nav['Admin'] = 'admin.php'; }
 
 $Page->title = (isset($title) ? $title : null);
 $Page->header();
