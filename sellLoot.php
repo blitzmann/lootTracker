@@ -93,7 +93,22 @@ if (filter_has_var(INPUT_POST, 'submitOpSale') || filter_has_var(INPUT_POST, 'su
 		<p>On this page, you'll be able to record how much the loot sold for. Simple two step process:</p>
 		<p>1) Load up your cargohold. The loot should be found in director-only corp hangers. Only put the amount listed as 'qty' in your cargohold. Do not put more or less. If there isn't enough in the corp's hanger to meet the qty requirement shown here, then something is wrong -- please consult the other directors as to what may have happened; chances are someone typed in the wrong amount when recording loot, or it might be in another hanger.</p>
 		<p>2) Haul the loot to a trade station and sell. When you sell the loot, record the total amount each one sold for. For example, if 30 Melted Nanoribbons sold for 180mil ISK total, type in 180000000 for Melted Nanoribbons. <strong>Remember:</strong> sometimes you might sell loot to multiple people's buy orders. If this happens, you'll have to sell that loot multiple times. Remember to add the totals up and put the total here. Also, decimals aren't needed, so don't put them here.</p>
-		<hr />";
+		<hr />";?>
+	<script type="text/Javascript">
+        $(document).ready(function(){
+            $('[name="journalImport"]').click(function(){
+                $.get('ajax.php',function(data){
+                    data = $.parseJSON(data);
+                    $.each(data,function(i,v){                      
+                        $('[name="sale['+i+']"]').attr('value',v);
+                    });
+                });
+            });
+        });
+    </script>
+	<button name='journalImport'>Import Journal</button>
+	
+<?php
 
 	if (isset($error)) { echo $error; }
 	$form->display_form();
