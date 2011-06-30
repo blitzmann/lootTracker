@@ -17,8 +17,10 @@ class Page {
 		set_error_handler(array($this, 'error_handler')); 
 	}
 	
-	public function header() {
+	public function header($title = null) {
 		global $DB, $User;
+		
+		$this->title = $title;
 		
 		//date_default_timezone_set("America/New_York"); // Sets timezone for site, so that I don't get confused with the time functions and whatnot
 		header('Content-Type: text/html; charset=UTF-8'); // Charsets and types. Nothing fancy.

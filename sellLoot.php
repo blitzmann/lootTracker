@@ -4,15 +4,15 @@
  * Copyright (C) 2011 Ryan Holmes
  * <http://www.gnu.org/licenses/agpl.html>
  */
- 
-$title = 'Sell Loot';
 
 require '_.php';
+
+$Page->header('Sell Loot');
 
 if (!$User->hasRole('director')){
 	$Page->errorfooter('Sorry, but only Directors or other trusted members can access the loot container, and thus sell it.'); }
 
-echo "<h2>Sell Stash</h3>";
+echo "<h2>Sell Stash</h2>";
 
 if (filter_has_var(INPUT_POST, 'submitOpSale') || filter_has_var(INPUT_POST, 'submitLootSale')) {
 
@@ -37,7 +37,7 @@ if (filter_has_var(INPUT_POST, 'submitOpSale') || filter_has_var(INPUT_POST, 'su
 		$form->add_numeric(
 			'sale', 
 			"<img style='height: 100%; vertical-align: middle;' src='http://evefiles.capsuleer.de/types/".$stuff['typeID']."_32.png' /> ".$stuff['typeName']." <small>(qty: ".$stuff['total'].")</small>", 
-			null, 15, 13, 5, 0, null, 'ISK profit', $stuff['typeID']); 
+			null, 15, 13, 1, 0, null, 'ISK profit', $stuff['typeID']); 
 	}
 	$form->add_submit('submitLootSale', 'Submit');
 
@@ -48,6 +48,7 @@ if (filter_has_var(INPUT_POST, 'submitOpSale') || filter_has_var(INPUT_POST, 'su
 		$form->update_values_from_post();
 	
 		try {
+
 			if (!$form->validate()) {
 				throw new InvalidInput(); }
 	
@@ -57,7 +58,7 @@ if (filter_has_var(INPUT_POST, 'submitOpSale') || filter_has_var(INPUT_POST, 'su
 				$form->errors[false][] = "No data submitted.";
 				throw new InvalidInput(); 
 			}
-		
+
 			$loots = filter_var_array($_POST['sale'], FILTER_VALIDATE_INT);
 		
 			$DB->e("INSERT INTO `saleHistory` (`saleID`, `seller`, `saleTime`) VALUES (?, ?, ?)", null, $User->charID, time());
@@ -96,17 +97,30 @@ if (filter_has_var(INPUT_POST, 'submitOpSale') || filter_has_var(INPUT_POST, 'su
 		<hr />";?>
 	<script type="text/Javascript">
         $(document).ready(function(){
+
+			$('#loading').ajaxStart(function() {
+				$(this).show();
+			}).ajaxComplete(function() {
+				$(this).hide();
+			});
+
             $('[name="journalImport"]').click(function(){
                 $.get('ajax.php',function(data){
                     data = $.parseJSON(data);
-                    $.each(data,function(i,v){                      
-                        $('[name="sale['+i+']"]').attr('value',v);
+					if (data.cacheNotice) {
+						$('#loading').after("<p class='note'><strong>Notice:</strong> "+data.cacheNotice+"</p>"); }
+					if (data.debt) {
+						alert ('You have debt. Please remember to send this money to the proper corp wallet. Amount: '+data.debt);
+					}
+                    $.each(data.data,function(i,v){
+					    $('[name="sale['+i+']"]').attr('value',v);
                     });
                 });
             });
+
         });
     </script>
-	<button name='journalImport'>Import Journal</button>
+	<button name='journalImport'>Import Journal</button> <span style='display: none;' id='loading'>LOADING...</span>
 	
 <?php
 

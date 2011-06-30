@@ -1,24 +1,16 @@
 <?php
-session_start();
 
+require '_.php';
 
-///// CONFIG STUFF
-///// fix with require _.php, but don't print page headers...
-
-$cfg = parse_ini_file('inc/config.ini');
-$secret = parse_ini_file($cfg['secret_file']);
-
-function __autoload($name) {
-    include './classes/'.$name.'.class.php'; }
-
-	try {
-	$DB = new DB($secret);
-}
-catch ( PDOException $e ) {
-    echo 'Database connection failed. PDOException:';
-    echo $e->getMessage();
-	unset($secret);
-    die('=/');
+function get_data($url) {
+	$ch = curl_init();
+	$timeout = 5;
+	curl_setopt($ch,CURLOPT_URL,$url);
+	curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+	curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,$timeout);
+	$data = curl_exec($ch);
+	curl_close($ch);
+	return $data;
 }
 
 $stuffs = $DB->qa("
@@ -29,41 +21,74 @@ $stuffs = $DB->qa("
 		WHERE opID = ".implode($_SESSION['sellLootOps'], ' OR opID = ')."
 		GROUP BY typeID
 		", array());
+		
+		
+$url = 'http://api.eve-online.com/char/WalletTransactions.xml.aspx?'.
+		'useriD='.$User->userID.'&'.
+		'apiKey='.User::decrypt($User->key).'&'.
+		'characterID='.$User->charID.'&'.
+		'rowCount='.(count($stuff) + 150);
 
-$xml = new SimpleXMLElement(file_get_contents('charWalletTransactions.xml'));
+if (JOURNAL_API_FILE) {
+	$xml = new SimpleXMLElement(file_get_contents(JOURNAL_API_FILE)); }
+else {
+	$data = get_data($url);
+	$xml = new SimpleXMLElement($data);
 
-// if cache time hasn't been reached, error out.
+	if (JOURNAL_API_DUBUG) { 
+		file_put_contents('./xmlDebug/charWalletTransaction-'.date("m-d-y_H:i:s").'.xml', $data); }
+}
 
+//print_r($xml);
 
 $newArray = array();
 $json = array();
+$check = array();
+
+// data is cached for 1620 sec (27min). subtract 5 from the current time as a nice buffer.
+if ((strtotime((string)$xml->cachedUntil) - (strtotime((string)$xml->currentTime)-5)) < 1620) {
+	$json['cacheNotice'] =  'Transaction API seems to have been recently requested and thus may not be up-to-date with loot sales. '.
+	'If the data below seems inaccurate, please try again after '.
+	((string)$xml->cachedUntil).' ('.ceil((strtotime((string)$xml->cachedUntil)-time())/60).' min)'; }
+	
 foreach ($stuffs AS $stuff) {
 	$newArray[$stuff['typeID']] = $stuff['total']; }
 
-		$debt = 0;
 foreach ($xml->result->rowset->row AS $transaction) {
-	if (!isset($newArray[(int)$transaction['typeID']]) || (string)$transaction['transactionType'] === 'buy') { 
+	$id = (int)$transaction['typeID'];
+	
+	//if (empty($newArray[$id])) {
+	//break; }
+	
+	if (!isset($newArray[$id]) || (string)$transaction['transactionType'] === 'buy') { 
 		continue; }
-		
-	if (!isset($json[(int)$transaction['typeID']])) { $json[(int)$transaction['typeID']] = 0; }
+	//print (string)$transaction['typeID']." : ".$transaction['quantity']	."<br>";
+	if (!isset($json['data'][$id])) { $json['data'][$id] = 0; }
+	if (!isset($check[$id])) { $check[$id] = 0; }
 
 	$total = ((float)$transaction['price']*(int)$transaction['quantity']);
 	// .01 for 1% sales tax
 	$tax = round(($total * .01), 2);
-	$total = ($total - $tax);
-	$json[(int)$transaction['typeID']] = ($json[(int)$transaction['typeID']] + $total);
+	$profit = floor($total - $tax);
+	$json['data'][$id] = ($json['data'][$id] + $profit);
+	
+	$newArray[$id] = ($newArray[$id] - (int)$transaction['quantity']);
 	
 	if ((string)$transaction['transactionFor'] === 'personal') {
-		$debt = $debt + $total; }
+		$json['debt'] = (isset($json['debt']) ? $json['debt'] : 0) + $profit; }
+		
+	if ($newArray[$id] == 0) {
+		unset($newArray[$id]); }
 }
+
+if (!empty($newArray)) {
+	$json['leftOver'] = $newArray; }
 	
+
 //header('Cache-Control: no-cache, must-revalidate');
 //header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 //header('Content-type: application/json');
 	echo json_encode($json);
-
-
-
 
 
 ?>

@@ -4,10 +4,10 @@
  * Copyright (C) 2011 Ryan Holmes
  * <http://www.gnu.org/licenses/agpl.html>
  */
- 
-$title = 'Record Loot';
 
 require '_.php';
+
+$Page->header('Record Loot');
 
 if(!isset($_SESSION['opID'])) {
 	$Page->errorfooter('No operation has been selected. Please go to the operations page and select an operation before recording your loot.', false); }

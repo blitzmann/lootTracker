@@ -4,10 +4,10 @@
  * Copyright (C) 2011 Ryan Holmes
  * <http://www.gnu.org/licenses/agpl.html>
  */
- 
-$title = 'Operation Info';
 
 require '_.php';
+
+$Page->header('Operation Info');
 
 if (isset($_SESSION['opID'])) {
 	
