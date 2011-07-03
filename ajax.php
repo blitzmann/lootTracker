@@ -39,14 +39,13 @@ else {
 }
 
 $transactions = array();
-$newArray = array();
-$json = array();
-$check = array();
+$loot         = array();
+$json         = array();
 
 foreach ($xml->result->rowset->row AS $row) {
 	$attr = (array)$row->attributes();
 	$transactions[$attr['@attributes']['transactionID']] = $attr['@attributes'];
-	// use xpath to to filter out only sale data via attributes 
+	// todo: use xpath to to filter out only sale data via attributes 
 }
 
 krsort($transactions);
@@ -58,18 +57,17 @@ if ((strtotime((string)$xml->cachedUntil) - (strtotime((string)$xml->currentTime
 	((string)$xml->cachedUntil).' ('.ceil((strtotime((string)$xml->cachedUntil)-time())/60).' min)'; }
 	
 foreach ($stuffs AS $stuff) {
-	$newArray[$stuff['typeID']] = $stuff['total']; }
+	$loot[$stuff['typeID']] = $stuff['total']; }
 
 foreach ($transactions AS $transaction) {
 	$id = $transaction['typeID'];
 
-	if (empty($newArray)) {
+	if (empty($loot)) {
 		break; }
-	if (!isset($newArray[$id]) || $transaction['transactionType'] === 'buy') { 
+	if (!isset($loot[$id]) || $transaction['transactionType'] === 'buy') { 
 		continue; }
 
 	if (!isset($json['data'][$id])) { $json['data'][$id] = 0; }
-	if (!isset($check[$id])) { $check[$id] = 0; }
 
 	$total = ($transaction['price']*$transaction['quantity']);
 	// .01 for 1% sales tax
@@ -77,17 +75,17 @@ foreach ($transactions AS $transaction) {
 	$profit = floor($total - $tax);
 	$json['data'][$id] = ($json['data'][$id] + $profit);
 	
-	$newArray[$id] = ($newArray[$id] - (int)$transaction['quantity']);
+	$loot[$id] = ($loot[$id] - (int)$transaction['quantity']);
 	
 	if ($transaction['transactionFor'] === 'personal') {
 		$json['debt'] = (isset($json['debt']) ? $json['debt'] : 0) + $profit; }
 		
-	if ($newArray[$id] == 0) {
-		unset($newArray[$id]); }
+	if ($loot[$id] == 0) {
+		unset($loot[$id]); }
 }
 
-if (!empty($newArray)) {
-	$json['leftOver'] = $newArray; }
+if (!empty($loot)) {
+	$json['leftOver'] = $loot; }
 	
 echo json_encode($json);
 
