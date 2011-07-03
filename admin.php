@@ -4,10 +4,10 @@
  * Copyright (C) 2011 Ryan Holmes
  * <http://www.gnu.org/licenses/agpl.html>
  */
- 
-$title = 'Admin';
 
 require '_.php';
+
+$Page->header('Admin Page');
 
 if (!$User->hasRole('director')){
 	$Page->errorfooter('Sorry, but only Directors can access this page.'); }
