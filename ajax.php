@@ -21,8 +21,7 @@ $stuffs = $DB->qa("
 		WHERE opID = ".implode($_SESSION['sellLootOps'], ' OR opID = ')."
 		GROUP BY typeID
 		", array());
-		
-		
+
 $url = 'http://api.eve-online.com/char/WalletTransactions.xml.aspx?'.
 		'useriD='.$User->userID.'&'.
 		'apiKey='.User::decrypt($User->key).'&'.
@@ -39,11 +38,18 @@ else {
 		file_put_contents('./xmlDebug/charWalletTransaction-'.date("m-d-y_H:i:s").'.xml', $data); }
 }
 
-//print_r($xml);
-
+$transactions = array();
 $newArray = array();
 $json = array();
 $check = array();
+
+foreach ($xml->result->rowset->row AS $row) {
+	$attr = (array)$row->attributes();
+	$transactions[$attr['@attributes']['transactionID']] = $attr['@attributes'];
+	// use xpath to to filter out only sale data via attributes 
+}
+
+krsort($transactions);
 
 // data is cached for 1620 sec (27min). subtract 5 from the current time as a nice buffer.
 if ((strtotime((string)$xml->cachedUntil) - (strtotime((string)$xml->currentTime)-5)) < 1620) {
@@ -54,19 +60,18 @@ if ((strtotime((string)$xml->cachedUntil) - (strtotime((string)$xml->currentTime
 foreach ($stuffs AS $stuff) {
 	$newArray[$stuff['typeID']] = $stuff['total']; }
 
-foreach ($xml->result->rowset->row AS $transaction) {
-	$id = (int)$transaction['typeID'];
-	
-	//if (empty($newArray[$id])) {
-	//break; }
-	
-	if (!isset($newArray[$id]) || (string)$transaction['transactionType'] === 'buy') { 
+foreach ($transactions AS $transaction) {
+	$id = $transaction['typeID'];
+
+	if (empty($newArray)) {
+		break; }
+	if (!isset($newArray[$id]) || $transaction['transactionType'] === 'buy') { 
 		continue; }
-	//print (string)$transaction['typeID']." : ".$transaction['quantity']	."<br>";
+
 	if (!isset($json['data'][$id])) { $json['data'][$id] = 0; }
 	if (!isset($check[$id])) { $check[$id] = 0; }
 
-	$total = ((float)$transaction['price']*(int)$transaction['quantity']);
+	$total = ($transaction['price']*$transaction['quantity']);
 	// .01 for 1% sales tax
 	$tax = round(($total * .01), 2);
 	$profit = floor($total - $tax);
@@ -74,7 +79,7 @@ foreach ($xml->result->rowset->row AS $transaction) {
 	
 	$newArray[$id] = ($newArray[$id] - (int)$transaction['quantity']);
 	
-	if ((string)$transaction['transactionFor'] === 'personal') {
+	if ($transaction['transactionFor'] === 'personal') {
 		$json['debt'] = (isset($json['debt']) ? $json['debt'] : 0) + $profit; }
 		
 	if ($newArray[$id] == 0) {
@@ -84,11 +89,6 @@ foreach ($xml->result->rowset->row AS $transaction) {
 if (!empty($newArray)) {
 	$json['leftOver'] = $newArray; }
 	
-
-//header('Cache-Control: no-cache, must-revalidate');
-//header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-//header('Content-type: application/json');
-	echo json_encode($json);
-
+echo json_encode($json);
 
 ?>
