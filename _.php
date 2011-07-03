@@ -17,9 +17,17 @@ define('SITE_NAME', $cfg['site_name']);
 define('CORP', $cfg['corp_name']);
 define('CORPTIC', $cfg['corp_ticker']);
 define('CORPID', (float)$cfg['corpid']);
+define('PAYNAME', $cfg['payname']);
 define('TAX', (float)$cfg['tax']); //Tax. 1 = 100%, .35 = 35%, etc
 define('DEVELOPER', (bool)$cfg['developer']); // If true, prints out errors on page in the footer
 define('DBVERSION', $cfg['db_version']); // static DB version, shows up in footer
+
+/* the XML file to use. If this is set, the journal import will not fetch from the API server.
+ * usefull for testing out the XML files that are generated via JOURNAL_API_DUBUG */
+define('JOURNAL_API_FILE', null);
+/* causes API fetches to be saved as an XML file on the server for later viewing and debugging. 
+ * Not relevent if JOURNAL_API_FILE is set */
+define('JOURNAL_API_DUBUG', false); 
 
 $ingame = substr($_SERVER['HTTP_USER_AGENT'],-7) === 'EVE-IGB';
 if ($ingame) {
@@ -131,8 +139,5 @@ $Page->nav['Sell Stash'] = 'sellLoot.php';
 $Page->nav['Pay Out'] = 'payOut.php';
 if ($User->hasRole('director')){
 	$Page->nav['Admin'] = 'admin.php'; }
-
-$Page->title = (isset($title) ? $title : null);
-$Page->header();
 
 ?>

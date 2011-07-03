@@ -4,9 +4,10 @@
  * Copyright (C) 2011 Ryan Holmes
  * <http://www.gnu.org/licenses/agpl.html>
  */
- 
-$title = 'Pay Out';
+
 require '_.php';
+
+$Page->header('Pay Out');
 
 if (!$User->hasRole('director')){
 	$Page->errorfooter('Sorry, but only Directors or other trusted members can access the loot container, and thus sell it.'); }
