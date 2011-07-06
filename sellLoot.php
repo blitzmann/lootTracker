@@ -113,18 +113,24 @@ if (filter_has_var(INPUT_POST, 'submitOpSale') || filter_has_var(INPUT_POST, 'su
 					if (data.cacheNotice) {
 						$('#loading').after("<p class='note'><strong>Notice:</strong> "+data.cacheNotice+"</p>"); }
 					if (data.debt) {
-						alert ('You have debt. Please remember to send this money to the proper corp wallet. Amount: '+data.debt);
+						alert ('You have debt. Please remember to send this money to the proper corp wallet. Amount: '+$.mask.string(data.debt, 'integer'));
 					}
-					$('[type="submit"]').before("<h3><strong>Total:</strong> "+data.total+"</h3>");
+					$('[type="submit"]').before("<h3><strong>Total:</strong> "+$.mask.string(data.total, 'integer')+"</h3>");
 					$.each(data.data,function(i,v){
-					    $('[name="sale['+i+']"]').attr('value',v);
+					    $('[name="sale['+i+']"]').attr('value',$.mask.string(v, 'integer'));
                     });
                 });
             });
+
+			$('[name^="sale"]').setMask('integer');
+
+			$('#sellLoot').submit(function() {
+				$('[name^="sale"]').setMask('999999999999'); });
+
         });
     </script>
 	<button name='journalImport'>Import Journal</button> <span style='display: none;' id='loading'>LOADING...</span>
-	
+
 <?php
 
 	if (isset($error)) { echo $error; }
