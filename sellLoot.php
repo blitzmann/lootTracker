@@ -69,13 +69,14 @@ if (filter_has_var(INPUT_POST, 'submitOpSale') || filter_has_var(INPUT_POST, 'su
 			unset($_SESSION['sellLootOps']);
 			foreach ($loots AS $id => $profit) {
 				$DB->e("INSERT INTO `saleData` (`saleID`, `typeID`, `profit`) VALUES (?, ?, ?)", $saleID, $id, $profit); }
-	
-			$profit = $DB->q1("SELECT SUM(profit) FROM saleData WHERE saleID = ? GROUP BY saleID", $saleID);
+			
 			echo 
-			"<div class='success'><strong>Success:</strong> Sale submited</div>".
-			"<p>Profit from this sale has successfully been submitted into the database.</p>
-			<p><strong>Important:</strong> If you sold the loot and the money went to your personal wallet (ie: did not \"use corp wallet\" when selling), transfer <strong>".number_format($profit)."</strong> to the corp's payout wallet. <strong>Failing to do so will be considered corp theft and be delt with accordingly.</strong></p>
-			<p>To issue payments to all the corp members involved, please visit the <a href='payOut.php'>Pay Out</a> page. This can be done later if now is not a convienent time.</p>";
+			"<div class='success'><strong>Success:</strong> Sale submited.</div>\n".
+			"<p>Profit from this sale has successfully been submitted into the database.</p>\n";
+			if(filter_has_var(INPUT_POST, 'debt')){
+				echo
+				"<p><strong>Remember:</strong> You have a debt to the corp for the amount of ".number_format($_POST['debt']).". This will be logged and tracked; if you do not pay this to the corp, it will be considered corp theft and be delt with accordingly.</p>"; 
+			}
 			
 			$Page->footer();
 		}
@@ -112,10 +113,12 @@ if (filter_has_var(INPUT_POST, 'submitOpSale') || filter_has_var(INPUT_POST, 'su
                     data = $.parseJSON(data);
 					if (data.cacheNotice) {
 						$('#loading').after("<p class='note'><strong>Notice:</strong> "+data.cacheNotice+"</p>"); }
+					$('#sellLoot button[type="submit"]').before("<h3><strong>Total:</strong> "+$.mask.string(data.total, 'integer')+"</h3>");
+
 					if (data.debt) {
-						alert ('You have debt. Please remember to send this money to the proper corp wallet. Amount: '+$.mask.string(data.debt, 'integer'));
+						$('#sellLoot button[type="submit"]').before("<p class='error'><strong>Warning:</strong> You have debt. This happens when you don't use the \"Use Corp Wallet\" option when selling items and the profit goes to your personal wallet rather than the corps'. Please remember to send the proper amount to the proper corp wallet; failing to do so is considered corp theft and will be delt with accordingly.<br/>Amount: <strong>"+$.mask.string(data.debt, 'integer')+"</strong></p>");
+						$('#sellLoot').prepend("<input type='hidden' name='debt' value='"+data.debt+"' />");
 					}
-					$('[type="submit"]').before("<h3><strong>Total:</strong> "+$.mask.string(data.total, 'integer')+"</h3>");
 					$.each(data.data,function(i,v){
 					    $('[name="sale['+i+']"]').attr('value',$.mask.string(v, 'integer'));
                     });
