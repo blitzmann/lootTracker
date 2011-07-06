@@ -86,6 +86,8 @@ foreach ($transactions AS $transaction) {
 
 if (!empty($loot)) {
 	$json['leftOver'] = $loot; }
+
+$json['total'] = array_sum($json['data']);
 	
 echo json_encode($json);
 

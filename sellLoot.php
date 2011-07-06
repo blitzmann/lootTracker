@@ -91,9 +91,12 @@ if (filter_has_var(INPUT_POST, 'submitOpSale') || filter_has_var(INPUT_POST, 'su
 	}
 	
 	echo "
-		<p>On this page, you'll be able to record how much the loot sold for. Simple two step process:</p>
-		<p>1) Load up your cargohold. The loot should be found in director-only corp hangers. Only put the amount listed as 'qty' in your cargohold. Do not put more or less. If there isn't enough in the corp's hanger to meet the qty requirement shown here, then something is wrong -- please consult the other directors as to what may have happened; chances are someone typed in the wrong amount when recording loot, or it might be in another hanger.</p>
-		<p>2) Haul the loot to a trade station and sell. When you sell the loot, record the total amount each one sold for. For example, if 30 Melted Nanoribbons sold for 180mil ISK total, type in 180000000 for Melted Nanoribbons. <strong>Remember:</strong> sometimes you might sell loot to multiple people's buy orders. If this happens, you'll have to sell that loot multiple times. Remember to add the totals up and put the total here. Also, decimals aren't needed, so don't put them here.</p>
+		<p>On this page, you'll be able to record how much the loot sold for. Simple process:</p>
+		<p>1) Load up your cargohold. The loot should be found in director-only corp hangers. Only put the amount listed as 'qty' in your cargohold. Do not put more or less. If there isn't enough in the corp hanger to meet the qty requirement shown here, then something is wrong -- please consult the other directors as to what may have happened; chances are someone typed in the wrong amount when recording loot, or it might be in another hanger.</p>
+		<p>2) Go to Wallet -> Corporation Wallet -> Wallet Divisions and right click ".PAYNAME." -> Set As Active Wallet.</p>
+		<p>3) Haul the loot to a trade station and sell. When you sell the loot, remember to check \"use corp wallet\" so that the money recieved goes directly to the corp's payout wallet. <strong>Remember: </strong>Some loot is bought by NPC's at a fixed rate. Many trade stations, including Jita, do not have these NPC orders. Remember to sell these items to the NPCs.</p>
+		<p>4) When done selling all the items, click the \"Import Journal\" button. This will fetch the transaction data from your API and automatically fill in the details for you. Please double check these calues if they seem off.</p>
+		<p>5) When finished, click \"Submit\". <strong>Remember:</strong> Change the corp wallet division back to the Master Wallet (or any other wallet other than ".PAYNAME.")</strong></p>
 		<hr />";?>
 	<script type="text/Javascript">
         $(document).ready(function(){
@@ -112,12 +115,12 @@ if (filter_has_var(INPUT_POST, 'submitOpSale') || filter_has_var(INPUT_POST, 'su
 					if (data.debt) {
 						alert ('You have debt. Please remember to send this money to the proper corp wallet. Amount: '+data.debt);
 					}
-                    $.each(data.data,function(i,v){
+					$('[type="submit"]').before("<h3><strong>Total:</strong> "+data.total+"</h3>");
+					$.each(data.data,function(i,v){
 					    $('[name="sale['+i+']"]').attr('value',v);
                     });
                 });
             });
-
         });
     </script>
 	<button name='journalImport'>Import Journal</button> <span style='display: none;' id='loading'>LOADING...</span>
