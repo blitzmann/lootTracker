@@ -18,7 +18,7 @@ class Page {
 	}
 	
 	public function header($title = null) {
-		global $DB, $User;
+		global $DB, $User, $ingame;
 		
 		$this->title = $title;
 		
@@ -37,10 +37,13 @@ class Page {
 		"	<div id='header'>\n";
 		$this->userbox(); // Prints out the userbox
 		echo
-		"		<h1>".SITE_NAME."</h1>\n".
+		"		<h1>".SITE_NAME."</h1>\n";
 		//"		<h2>".SUB_HEAD."</h2>\n".
 	//	"	<p class='hide'><a href='#content'>Skip to content</a></p>\n".
-		"	<p class='note'><strong>Notice:</strong> Don't use the back button in the IGB. I dunno why, but it'll cause a 400 error.</p>".
+		if ($ingame) { echo
+		"	<p class='note'><strong>Notice:</strong> Don't use the back button in the IGB. I dunno why, but it'll cause a 400 error.</p>"; }
+		
+		echo
 		"	</div>\n".
 		"	<div id='menu-wrapper'>";
 		
