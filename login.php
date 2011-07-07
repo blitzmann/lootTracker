@@ -74,7 +74,7 @@ else {
 	"	<dt>API <strong>Full</strong> Key</dt>\n".
 	"		<dd><input style='text-align:center;' type='text' name='key' /></dd>\n".
 	"</dl><br />\n".
-	($ingame ? " <button name='continue' value='yes' type='submit'>Continue</button>" : "<br /><small>You must use the In-Game Browser to register</small>" ).
+	"<button name='continue' value='yes' type='submit'>Continue</button>".
 	"</form></div>";
 	
 }
