@@ -60,7 +60,7 @@ if (filter_has_var(INPUT_POST, 'submitOpSale') || filter_has_var(INPUT_POST, 'su
 			}
 
 			$loots = filter_var_array($_POST['sale'], FILTER_VALIDATE_INT);
-		
+
 			$DB->e("INSERT INTO `saleHistory` (`saleID`, `seller`, `saleTime`) VALUES (?, ?, ?)", null, $User->charID, time());
 			$saleID = $DB->lastInsertID();
 		
@@ -106,33 +106,42 @@ if (filter_has_var(INPUT_POST, 'submitOpSale') || filter_has_var(INPUT_POST, 'su
 				$(this).show();
 			}).ajaxComplete(function() {
 				$(this).hide();
+				$('span.total').html( $('[name^="sale"]').sumValues() ); // Total the values
 			});
 
+			// Add total div
+			$('#sellLoot button[type="submit"]').before("<div><strong>Total:</strong> <span class='total'>0</span> ISK</div>");
+
+			// This happens when the Import button is clicked
             $('[name="journalImport"]').click(function(){
                 $.get('ajax.php',function(data){
                     data = $.parseJSON(data);
 					if (data.cacheNotice) {
 						$('#loading').after("<p class='note'><strong>Notice:</strong> "+data.cacheNotice+"</p>"); }
-					$('#sellLoot button[type="submit"]').before("<h3><strong>Total:</strong> "+$.mask.string(data.total, 'integer')+"</h3>");
 
 					if (data.debt) {
 						$('#sellLoot button[type="submit"]').before("<p class='error'><strong>Warning:</strong> You have debt. This happens when you don't use the \"Use Corp Wallet\" option when selling items and the profit goes to your personal wallet rather than the corps'. Please remember to send the proper amount to the proper corp wallet; failing to do so is considered corp theft and will be delt with accordingly.<br/>Amount: <strong>"+$.mask.string(data.debt, 'integer')+"</strong></p>");
 						$('#sellLoot').prepend("<input type='hidden' name='debt' value='"+data.debt+"' />");
 					}
+
 					$.each(data.data,function(i,v){
 					    $('[name="sale['+i+']"]').attr('value',$.mask.string(v, 'integer'));
                     });
+
                 });
             });
 
 			$('[name^="sale"]').setMask('integer');
 
+			$('[name^="sale"]').change(function() {
+				$('span.total').html( $('[name^="sale"]').sumValues() );
+			});
+
 			$('#sellLoot').submit(function() {
 				$('[name^="sale"]').setMask('999999999999'); });
-
         });
     </script>
-	<button name='journalImport'>Import Journal</button> <span style='display: none;' id='loading'>LOADING...</span>
+	<button name='journalImport'>Import Journal</button> <span style='display: none;' id='loading'>LOADING... <img src='./inc/ajax.gif' /></span>
 
 <?php
 
