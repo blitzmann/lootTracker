@@ -413,7 +413,7 @@ class Form {
 						$this->errors[$id][] = 'Please limit <strong>'. $field_info['label']. '</strong> to a maximum of '. $field_info['max_lines']. ' lines.';
 
 			} elseif ($field_info['type'] == radio || $field_info['type'] == select) {
-				if (!array_key_exists($field_info['value'], $field_info['options']))
+				if (!array_key_exists($field_info['value'], $field_info['options']) || $field_info['value'] == null)
 					$this->errors[false][] = 'Invalid form data.';
 			}
 

@@ -18,10 +18,19 @@ echo "<h2>Submit Loot</h2>\n";
 echo "
 <script language='javascript' type='text/javascript'>
 $(document).ready(function () {
-	$('dl:not(#fs-groupsSet dl)').css('display', 'none');
+
+	$('fieldset:not(#fs-groupsSet)').hide();
 	
-	$('legend:not(#fs-groupsSet legend)').prepend('<span class=\'toggle\'>+</span> ');
-	$('legend:not(#fs-groupsSet legend)').toggle(function() {
+	$('#groupID_').change(function(){
+		if (this.value != '') {
+			$('fieldset:not(#fs-groupsSet)').show();	}
+		else {
+			$('fieldset:not(#fs-groupsSet)').hide();	}
+	});
+
+	$('dl:not(#fs-groupsSet dl)').hide();
+	
+	$('legend:not(#fs-groupsSet legend)').prepend('<span class=\'toggle\'>+</span> ').toggle(function() {
 		$(this).children().text('-');
 		$(this).next('dl').slideDown('fast');
 	}, function() {
@@ -57,6 +66,7 @@ foreach ($lootTypes AS $name => $sql) {
 
 $form = new Form('lootsubmit', 'Submit Loot', $_SERVER['PHP_SELF'], 'post');
 
+$options[null] = "-- Select Group --";
 // Go through the groups, building the options array
 for ($i=0, $l = count($groups); $i<$l; $i++) {
 	$options[$groups[$i]['groupID']] = "Group ".($i+1).": ".$groups[$i]['members']; }
