@@ -164,15 +164,25 @@ else {
 		
 	if (!count($ops)){
 		$Page->errorfooter('No operations waiting to be sold', false); }
-	
+?>
+	<script type="text/Javascript">
+        $(document).ready(function(){
+			$('#sellLoot button[type="submit"]').before("<div><strong>Total:</strong> <span class='total'>0</span>m<sup>3</sup></div>");
+
+			$('[name^="opSelect"]').change(function() {
+				$('span.total').html( $('input:checked ~ strong > .volume').sumValues() );
+			});
+		});
+    </script>
+<?php
 	echo "
 		<p>These operations have ended, but the loot has not been sold yet. Please select the operation(s) you wish to sell to continue.</p>
 		<p><strong>Disclaimer:</strong> You must sell <em>the entire operation stock</em> in one go. You can't sell half now, half later. Make sure you have enough cargo to haul all the operation loot that you wish to sell, otherwise make plans to have more than one hauler/trip. Again, if you select an operation, <strong>you must sell all the loot</strong></p><hr />\n";
 	
-	echo "<form action='".$_SERVER['PHP_SELF']."' method='post'>\n<ul>\n";
+	echo "<form id='sellLoot' action='".$_SERVER['PHP_SELF']."' method='post'>\n<ul>\n";
 	foreach ($ops AS $op) {
 		echo "
-			<li><label for='".$op['opID']."_'><input id='".$op['opID']."_' type='checkbox' name='opSelect[]' value='".$op['opID']."' /><img style='height: 100%; vertical-align: middle;' src='http://evefiles.capsuleer.de/icons/32_32/icon53_16.png' /> <em>".$op['title']."</em> -- ".$op['owner']." (total volume of op: <strong>".ceil($op['volume'])."m<sup>3</sup></strong>)</label></li>";
+			<li><label for='".$op['opID']."_'><input id='".$op['opID']."_' type='checkbox' name='opSelect[]' value='".$op['opID']."' /><img style='height: 100%; vertical-align: middle;' src='http://evefiles.capsuleer.de/icons/32_32/icon53_16.png' /> <em>".$op['title']."</em> -- ".$op['owner']." (total volume of op: <strong><span class='volume'>".ceil($op['volume'])."</span>m<sup>3</sup></strong>)</label></li>";
 	}
 	echo "<button name='submitOpSale' type='submit'>Go!</button></form>";
 	
