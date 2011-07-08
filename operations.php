@@ -78,13 +78,13 @@ $(document).ready(function(){
 	$("#memberForm input").change(function() {
 		$(this);
 		if ($(this).is(":checked") && $(this).hasClass("waschecked")) {
-			$(this).next('small').html('KEEP').closest('dt').removeClass('remove add').addClass('keep'); }
+			$(this).next('small').html('KEEP').closest('dt').toggleClass('remove keep'); }
 		else if (($(this).is(":checked") !== true && $(this).hasClass("waschecked"))){
-			$(this).next('small').html('REM').closest('dt').removeClass('keep add').addClass('remove'); }
+			$(this).next('small').html('REM').closest('dt').toggleClass('keep remove'); }
 		else if (($(this).is(":checked") && $(this).hasClass("waschecked") === false)){
-			$(this).next('small').html('ADD').closest('dt').removeClass('remove keep').addClass('add'); }
+			$(this).next('small').html('ADD').closest('dt').toggleClass('add'); }
 		else if (($(this).is(":checked") !== true && $(this).hasClass("waschecked") === false)){
-			$(this).next('small').html('').closest('dt').removeClass('remove add keep'); }
+			$(this).next('small').html('').closest('dt').removeClass('add'); }
     });
 });
 
