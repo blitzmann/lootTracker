@@ -68,7 +68,29 @@ if (isset($_SESSION['opID'])) {
 		$form->add_submit('submitMembers', 'Submit');
 
 		$form->display_form();
-		
+?>
+<script>
+$(document).ready(function(){
+
+	$("#memberForm input").parent().append('<small></small>');
+	$("#memberForm input:checked").addClass("waschecked").next('small').html('KEEP').closest('dt').addClass('keep');
+
+	$("#memberForm input").change(function() {
+		$(this);
+		if ($(this).is(":checked") && $(this).hasClass("waschecked")) {
+			$(this).next('small').html('KEEP').closest('dt').removeClass('remove add').addClass('keep'); }
+		else if (($(this).is(":checked") !== true && $(this).hasClass("waschecked"))){
+			$(this).next('small').html('REM').closest('dt').removeClass('keep add').addClass('remove'); }
+		else if (($(this).is(":checked") && $(this).hasClass("waschecked") === false)){
+			$(this).next('small').html('ADD').closest('dt').removeClass('remove keep').addClass('add'); }
+		else if (($(this).is(":checked") !== true && $(this).hasClass("waschecked") === false)){
+			$(this).next('small').html('').closest('dt').removeClass('remove add keep'); }
+    });
+});
+
+
+</script>
+<?php
 		echo "
 			</div>
 			<div id='endOp'>

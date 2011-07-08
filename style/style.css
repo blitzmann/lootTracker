@@ -177,7 +177,7 @@ p { margin-top: 0.75em; text-align: justify; }
 #lootsubmit dd, #sellLoot dd, #lt-payOut dd {
     float: left;
     height: 32px;
-    line-height: 32px;
+	line-height: 32px;
 	padding-right: 5px; }
 
 #groups dt {
@@ -205,12 +205,26 @@ p { margin-top: 0.75em; text-align: justify; }
 #memberForm { margin: 0 auto;}
 #memberForm dd { display: none; }
 
-#memberForm dt { 
-	float: left; 
-	width: 170px;
+#memberForm dt{ 
+	display: inline-block;
+	width: 155px;
 	height: 32px;
-    line-height: 32px; }
-	
+	margin: 2px 0px;
+    line-height: 32px;
+	padding-left: 3px;
+	/* transparent border here to make it easier to apply other borders without screwing with pixel shifts */
+	border: 1px solid transparent;
+}
+
+#memberForm label { cursor: pointer; }
+
+#memberForm dt > label > small { 
+	float: right; 
+	position: relative;
+	top: 10px;
+	right: 3px;
+}
+
 #footer {
     border-top: 0.0833em solid #666666;
     clear: both;
@@ -225,11 +239,15 @@ p { margin-top: 0.75em; text-align: justify; }
 .note, .success, .error {
     border-bottom-right-radius: 12px;
     border-top-left-radius: 12px;
-    padding: 5px; }
-.note { background-color: #E3E9F2; border: 1px solid #C1CAD5; }
-.success { background-color: #E6F8DE; border: 1px solid #4C9A20; }
-.error { background-color: #FFC4C4; border: 1px solid #FF0000; }
-	
+    padding: 5px; 
+}
+
+/* The transparent border in `#memberForm dt` is overriding these border, thus the !important.
+todo: find out the reason why and fix it */
+.note, .keep { background-color: #E3E9F2; border: 1px solid #C1CAD5 !important; }
+.success, .add { background-color: #E6F8DE; border: 1px solid #4C9A20 !important; }
+.error, .remove { background-color: #FFC4C4; border: 1px solid #FF0000 !important; }
+
 .error > span {
 	font-size: 1.1em;
 	display: block;
@@ -245,7 +263,7 @@ background-color: #E6F8DE;
     border: 1px solid #4C9A20;
 	padding: 5px; }
 	*/
-/* Was supposed to start a new row every 4 elements. This is handeled automatically from the floats wrapping around
+/* Was supposed to start a new row every 4 elements. This is handeled automatically from the inline-block wrapping around
 dt:nth-child(3n+2) { background: #F1F7FE; border-top: 1px solid black; border-bottom: 1px solid black; }
 */
 
