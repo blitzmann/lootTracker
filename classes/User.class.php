@@ -129,16 +129,17 @@ class User extends EveApiRoles {
             $errors[] = 'Character is already registered.';
         }
 		if (!$DB->q1('SELECT COUNT(*) FROM memberList WHERE charID = ?', $charID)) {
-            $errors[] = 'Character is not part of the corp.';
+            $errors[] = 'Character is not part of the corp. This could be because the member cache has not been updated to include your character. Please try again later; if the problem persists, please contact corp leadership.';
         }
 
         if ( $errors ) {
-/*
+		
 		   foreach ( $errors as $error ) {
-                $Page->sysnote($error, E_USER_WARNING);
+				echo "Error: $error";
+                //$Page->sysnote($error, E_USER_WARNING);
             }
 			
-            header('Status: 400');
+            /*header('Status: 400');
             $DB->audit_msg(sprintf('Failed register attempt: user="%s" pass="%s" serialized_errors="%s"',
                                     $username, $password, serialize($errors)));
 */

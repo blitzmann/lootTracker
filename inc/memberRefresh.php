@@ -20,7 +20,7 @@ catch ( PDOException $e ) {
 }
 
 $apiDetails = parse_ini_file($cfg['api_file']);
-$memberURL = "http://api.eve-online.com/corp/MemberTracking.xml.aspx?useriD=$apiDetails[userID]&apiKey=$apiDetails[apiKey]&characterID=$apiDetails[charID]";
+$memberURL = "http://api.eve-online.com/corp/MemberTracking.xml.aspx?keyID=$apiDetails[keyID]&vCode=$apiDetails[vCode]&characterID=$apiDetails[charID]";
 unset($apiDeatils);
 
 function get_data($url) {

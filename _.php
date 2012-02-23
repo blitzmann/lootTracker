@@ -24,7 +24,7 @@ define('DBVERSION', $cfg['db_version']); // static DB version, shows up in foote
 
 /* the XML file to use. If this is set, the journal import will not fetch from the API server.
  * usefull for testing out the XML files that are generated via JOURNAL_API_DUBUG */
-define('JOURNAL_API_FILE', null);
+define('JOURNAL_API_FILE', './xmlDebug/charWalletTransaction-07-03-11_21:02:12.xml');
 /* causes API fetches to be saved as an XML file on the server for later viewing and debugging. 
  * Not relevent if JOURNAL_API_FILE is set */
 define('JOURNAL_API_DUBUG', false); 
@@ -84,7 +84,7 @@ if ( filter_has_var(INPUT_POST, 'register') ) {
     if ( empty($_POST['charID']) && empty($_POST['pass']) ) {
         $User = new User; }
     else {
-		if ($_POST['pass'] == $_POST['pass']) {
+		if ($_POST['pass'] == $_POST['pass2']) {
 			$User = User::create(filter_input(INPUT_POST, 'charID'), filter_input(INPUT_POST, 'pass'), $_SESSION['userID'], $_SESSION['key']); }
 	}
 }

@@ -23,10 +23,10 @@ $stuffs = $DB->qa("
 		", array());
 
 $url = 'http://api.eve-online.com/char/WalletTransactions.xml.aspx?'.
-		'useriD='.$User->userID.'&'.
-		'apiKey='.User::decrypt($User->key).'&'.
+		'keyID='.$User->userID.'&'.
+		'vCode='.User::decrypt($User->key).'&'.
 		'characterID='.$User->charID.'&'.
-		'rowCount='.(count($stuff) + 150);
+		'rowCount='.(count($stuffs) + 150);
 
 if (JOURNAL_API_FILE) {
 	$xml = new SimpleXMLElement(file_get_contents(JOURNAL_API_FILE)); }

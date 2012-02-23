@@ -37,7 +37,7 @@ if (filter_has_var(INPUT_POST, 'submitOpSale') || filter_has_var(INPUT_POST, 'su
 		$form->add_numeric(
 			'sale', 
 			"<img style='height: 100%; vertical-align: middle;' src='http://evefiles.capsuleer.de/types/".$stuff['typeID']."_32.png' /> ".$stuff['typeName']." <small>(qty: ".$stuff['total'].")</small>", 
-			null, 15, 13, 1, 0, null, 'ISK profit', $stuff['typeID']); 
+			null, 15, 13, 1, 0, null, 'ISK', $stuff['typeID']); 
 	}
 	$form->add_submit('submitLootSale', 'Submit');
 
@@ -120,14 +120,17 @@ if (filter_has_var(INPUT_POST, 'submitOpSale') || filter_has_var(INPUT_POST, 'su
 						$('#loading').after("<p class='note'><strong>Notice:</strong> "+data.cacheNotice+"</p>"); }
 
 					if (data.debt) {
-						$('#sellLoot button[type="submit"]').before("<p class='error'><strong>Warning:</strong> You have debt. This happens when you don't use the \"Use Corp Wallet\" option when selling items and the profit goes to your personal wallet rather than the corps'. Please remember to send the proper amount to the proper corp wallet; failing to do so is considered corp theft and will be delt with accordingly.<br/>Amount: <strong>"+$.mask.string(data.debt, 'integer')+"</strong></p>");
+						$('#sellLoot button[type="submit"]').before("<p class='error'><strong>Warning:</strong> You have debt. This happens when you don't use the \"Use Corp Wallet\" option when selling items and the profit goes to your personal wallet rather than the corps'. Please remember to send the proper amount to the proper corp wallet; failing to do so is considered corp theft and will be delt with accordingly.<br/>Amount owed: <strong>"+$.mask.string(data.debt, 'integer')+"</strong></p>");
 						$('#sellLoot').prepend("<input type='hidden' name='debt' value='"+data.debt+"' />");
 					}
 
-					$.each(data.data,function(i,v){
-					    $('[name="sale['+i+']"]').attr('value',$.mask.string(v, 'integer'));
-                    });
-
+					if (data.data) {
+						$.each(data.data,function(i,v){
+							$('[name="sale['+i+']"]').attr('value',$.mask.string(v, 'integer'));
+						});
+					} else {
+						$('#loading').after("<p class='error'><strong>Error:</strong> No useable data available. There was no sell data pertaining to the items listed below from the API call. This could happen if you sold the loot a while ago and are just now getting around to putting the data in. In that case, you must manually search the corps and your transaction history to get the values.</p>");
+					}
                 });
             });
 

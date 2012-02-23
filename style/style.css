@@ -168,19 +168,29 @@ input[type='checkbox'], input[type='radio'] { height: 32px; vertical-align: midd
 
 #opBox { float:right; }
 
+#lootsubmit dl, #sellLoot dl , #lt-payOut dl  {
+display: table;
+	width: 475px;
+	margin: 0 auto;
+}
+
 #lootsubmit dt, #sellLoot dt , #lt-payOut dt {
-    clear: both;
-    display: inline;
+
     float: left;
     height: 32px;
     line-height: 32px;
-    width: 280px; }
-	
+	margin: 0px;
+	width: 320px; }
+
 #lootsubmit dd, #sellLoot dd, #lt-payOut dd {
-    float: left;
+text-align: right;
+
+    float: right;
+width:150px;
     height: 32px;
 	line-height: 32px;
-	padding-right: 5px; }
+	padding-right: 5px; margin: 0px;
+	}
 
 #groups dt {
     clear: both;

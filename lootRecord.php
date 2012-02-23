@@ -19,7 +19,7 @@ echo "
 <script language='javascript' type='text/javascript'>
 $(document).ready(function () {
 
-	$('fieldset:not(#fs-groupsSet)').hide();
+	//$('fieldset:not(#fs-groupsSet)').hide();
 	
 	$('#groupID_').change(function(){
 		if (this.value != '') {
@@ -28,7 +28,7 @@ $(document).ready(function () {
 			$('fieldset:not(#fs-groupsSet)').hide();	}
 	});
 
-	$('dl:not(#fs-groupsSet dl)').hide();
+	//$('dl:not(#fs-groupsSet dl)').hide();
 	
 	$('legend:not(#fs-groupsSet legend)').prepend('<span class=\'toggle\'>+</span> ').toggle(function() {
 		$(this).children().text('-');
